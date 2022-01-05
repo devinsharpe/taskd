@@ -13,6 +13,7 @@ export interface ToastState extends State {
   reset: () => void;
   push: (message: Toast) => void;
   shift: () => Toast | undefined;
+  remove: (index: number) => Toast | undefined;
 }
 
 const ToastStore = (set: SetState<ToastState>, get: GetState<ToastState>) => ({
@@ -31,6 +32,18 @@ const ToastStore = (set: SetState<ToastState>, get: GetState<ToastState>) => ({
     } else {
       return undefined;
     }
+  },
+  remove: (index: number) => {
+    const toast = get().messages[index];
+    if (toast) {
+      set((state) => ({
+        messages: [
+          ...state.messages.slice(0, index),
+          ...state.messages.slice(index + 1),
+        ],
+      }));
+    }
+    return toast;
   },
 });
 
