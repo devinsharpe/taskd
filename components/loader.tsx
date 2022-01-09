@@ -1,6 +1,6 @@
+import { Variant, Variants, motion } from "framer-motion";
+
 import React from "react";
-import { UilSpinnerAlt } from "@iconscout/react-unicons";
-import { motion } from "framer-motion";
 
 const animationVariants = {
   default: {
@@ -9,10 +9,10 @@ const animationVariants = {
     transition: {
       duration: 0.75,
       ease: "easeOut",
-      yoyo: Infinity,
-    },
+      repeat: true,
+    } as Variant,
   },
-};
+} as Variants;
 
 export interface LoaderProps {
   className?: string;
