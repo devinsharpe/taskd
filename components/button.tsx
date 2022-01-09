@@ -33,6 +33,7 @@ const Button: React.FC<ButtonProps> = ({
           isGhost ? "ghost" : ""
         }  flex items-center justify-center relative`}
         onClick={onClick}
+        aria-busy={isLoading}
       >
         {isLoading && (
           <Loader
