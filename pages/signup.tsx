@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { NextPage } from "next";
 import { Toast } from "../store/toast";
 import { supabase } from "../utils/supabaseClient";
+import { useRouter } from "next/router";
 import { useToastStore } from "../store";
 
 const SignUp: NextPage = () => {
@@ -13,26 +14,33 @@ const SignUp: NextPage = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
+  const router = useRouter();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     if (email && password && passwordConfirm && password == passwordConfirm) {
-      console.log(supabase);
-      supabase.auth.refreshSession();
-      const { user, error } = await supabase.auth.signUp({
+      setIsLoading(true);
+      supabase.auth.user;
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
       if (error) {
-        // send error message toast
-      }
-      if (user) {
-        const { session, error: error2 } = await supabase.auth.signIn({
-          email,
-          password,
+        pushToast({
+          title: "Something went wrong.",
+          message: error.message,
+          duration: 10000,
+          isClosable: true,
+          status: "ERROR",
+        } as Toast);
+        setIsLoading(false);
+      } else {
+        router.push({
+          pathname: "/signin",
+          query: {
+            email: email,
+          },
         });
-        console.log(session);
-        console.log(error2);
       }
     } else {
       pushToast({
@@ -44,7 +52,6 @@ const SignUp: NextPage = () => {
         isClosable: true,
         status: "ERROR",
       } as Toast);
-      console.log("error");
     }
   };
 
@@ -94,7 +101,12 @@ const SignUp: NextPage = () => {
               placeholder="SuperSecurePassword1234#"
             />
           </fieldset>
-          <Button type="submit" className="w-full" scaleOnHover>
+          <Button
+            type="submit"
+            className="w-full"
+            scaleOnHover
+            isLoading={isLoading}
+          >
             Sign Up
           </Button>
           <div className="flex items-center justify-center w-full">

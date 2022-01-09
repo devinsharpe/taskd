@@ -1,12 +1,65 @@
+import { FormEventHandler, useEffect, useState } from "react";
+import { useToastStore, useUserStore } from "../store";
+
 import Button from "../components/button";
 import Link from "next/link";
 import { NextPage } from "next";
-import { useState } from "react";
+import { supabase } from "../utils/supabaseClient";
+import { useRouter } from "next/router";
 
 const SignIn: NextPage = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
+  const { setUser } = useUserStore((state) => ({ setUser: state.setUser }));
+
+  useEffect(() => {
+    if (router.query.email) {
+      setEmail(router.query.email as string);
+    }
+  }, [router.query.email]);
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async function (e) {
+    e.preventDefault();
+
+    if (email && password) {
+      setIsLoading(true);
+      const { user, session, error } = await supabase.auth.signIn({
+        email,
+        password,
+      });
+      if (error) {
+        pushToast({
+          title: "That's not right.",
+          description: error.message,
+          duration: 10000,
+          isClosable: true,
+          status: "ERROR",
+        });
+        setIsLoading(false);
+      } else {
+        setUser(user!);
+        await fetch("/api/auth/set", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ event: "SIGNED_IN", session }),
+        });
+        router.push("/home");
+      }
+    } else {
+      pushToast({
+        title: "Missing Credentials",
+        description:
+          "Please enter a valid email and password. Otherwise, we can't sign you into your account.",
+        duration: 10000,
+        isClosable: true,
+        status: "ERROR",
+      });
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -21,7 +74,7 @@ const SignIn: NextPage = () => {
             </hgroup>
           </header>
 
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <fieldset className="transition-colors duration-150 group">
               <label htmlFor="account-email">Email Address</label>
               <input
@@ -29,6 +82,8 @@ const SignIn: NextPage = () => {
                 name="account-email"
                 id="account-email"
                 placeholder="jane.doe@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </fieldset>
             <fieldset className="transition-colors duration-150 group">
@@ -39,6 +94,8 @@ const SignIn: NextPage = () => {
                 id="account-password"
                 className="rounded-lg border-slate-400"
                 placeholder="SuperSecurePassword1234#"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </fieldset>
             <Button
@@ -50,12 +107,16 @@ const SignIn: NextPage = () => {
               Login
             </Button>
 
-            <div className="items-center justify-between w-full md:flex">
+            <div className="items-center justify-between w-full space-y-1 md:flex md:space-y-0">
               <Link href="/forgot/" passHref>
-                <a className="link">Forgot Password?</a>
+                <a className="block text-center link md:inline-block">
+                  Forgot Password?
+                </a>
               </Link>
               <Link href="/signup/" passHref>
-                <a className="link">Need an Account?</a>
+                <a className="block text-center link md:inline-block">
+                  Need an Account?
+                </a>
               </Link>
             </div>
           </form>
