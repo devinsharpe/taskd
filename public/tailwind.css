@@ -13,27 +13,29 @@ p {
 }
 
 .card {
-  @apply px-8 py-8 space-y-4 overflow-hidden bg-white shadow-lg rounded-xl dark:bg-zinc-800;
+  @apply p-4 md:p-8 space-y-4 overflow-hidden bg-white shadow-lg rounded-xl text-zinc-800;
+  @apply dark:bg-zinc-800 dark:text-zinc-100;
 }
 
 .card > * {
-  @apply mx-4;
+  @apply mx-0;
 }
 
 .card > header {
-  @apply p-8 -mx-8 -mt-8;
+  @apply pb-4 px-4 md:pb-8 md:px-8;
 }
 
 button.primary {
   @apply px-4 py-2 text-white rounded-lg bg-zinc-800 hover:bg-zinc-900;
   @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-800 focus:ring-offset-white;
-  @apply dark:bg-zinc-100 dark:hover:bg-zinc-50 dark:text-zinc-800 dark:focus:ring-offset-black;
+  @apply dark:bg-zinc-100 dark:hover:bg-zinc-50 dark:text-zinc-800 dark:focus:ring-offset-zinc-800 dark:focus:ring-zinc-100;
 }
 
 button.secondary {
   @apply px-4 py-2 text-white rounded-lg bg-zinc-600 hover:bg-zinc-700;
   @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-600;
   @apply dark:bg-zinc-300 dark:hover:bg-zinc-200 dark:text-zinc-800;
+  @apply dark:focus:ring-offset-zinc-100 dark:focus:ring-zinc-800;
 }
 
 button.alternate {
