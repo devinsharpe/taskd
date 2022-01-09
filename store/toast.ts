@@ -1,6 +1,7 @@
 import { GetState, SetState, State } from "zustand";
 
 export interface Toast {
+  id?: number;
   title: string;
   description?: string;
   duration: number;
@@ -22,7 +23,12 @@ const ToastStore = (set: SetState<ToastState>, get: GetState<ToastState>) => ({
     set(() => ({ messages: [] }));
   },
   push: (message: Toast) => {
-    set((state) => ({ messages: [...state.messages, message] }));
+    set((state) => ({
+      messages: [
+        ...state.messages,
+        { ...message, id: Math.round(Math.random() * 1000) },
+      ],
+    }));
   },
   shift: () => {
     if (get().messages.length) {
@@ -33,14 +39,11 @@ const ToastStore = (set: SetState<ToastState>, get: GetState<ToastState>) => ({
       return undefined;
     }
   },
-  remove: (index: number) => {
-    const toast = get().messages[index];
+  remove: (id: number) => {
+    const toast = get().messages.find((message) => message.id === id);
     if (toast) {
       set((state) => ({
-        messages: [
-          ...state.messages.slice(0, index),
-          ...state.messages.slice(index + 1),
-        ],
+        messages: state.messages.filter((message) => message.id !== id),
       }));
     }
     return toast;

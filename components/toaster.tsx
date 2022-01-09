@@ -16,6 +16,11 @@ const Toaster: React.FC = () => {
     removeToast: state.remove,
   }));
 
+  function handleDelete(id: number) {
+    console.log("deleting " + id);
+    removeToast(id);
+  }
+
   return (
     <>
       <AnimateSharedLayout>
@@ -23,9 +28,9 @@ const Toaster: React.FC = () => {
           <AnimatePresence initial={false} exitBeforeEnter={false}>
             {messages.map((message, index) => (
               <Toast
-                key={index}
+                key={message.id}
                 message={message}
-                onDelete={() => removeToast(index)}
+                onDelete={() => handleDelete(message.id!)}
               />
             ))}
           </AnimatePresence>
