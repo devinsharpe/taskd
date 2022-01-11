@@ -1,11 +1,14 @@
 import "../public/tailwind.css";
 
+import { useEffect, useState } from "react";
+
 import type { AppProps } from "next/app";
 import DarkModeToggle from "../components/dark-mode-toggle";
 import Toaster from "../components/toaster";
 import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [hideDarkModeToggle, setHideDarkModeToggle] = useState(false);
   const router = useRouter();
   if (typeof window !== "undefined") {
     console.log(router.pathname);
@@ -18,12 +21,20 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }
 
+  useEffect(() => {
+    setHideDarkModeToggle(
+      !["/signin", "/signup", "/reset", "/forget", "/"].includes(
+        router.pathname
+      )
+    );
+  }, [router.pathname]);
+
   return (
     <>
       <Component {...pageProps} />
       <Toaster />
       <div className="fixed bottom-4 right-4">
-        <DarkModeToggle />
+        <DarkModeToggle isHidden={hideDarkModeToggle} />
       </div>
     </>
   );

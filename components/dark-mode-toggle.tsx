@@ -3,7 +3,11 @@ import { UilMoon, UilSun } from "@iconscout/react-unicons";
 
 import { motion } from "framer-motion";
 
-const DarkModeToggle = () => {
+interface DarkModeToggleProps {
+  isHidden?: boolean;
+}
+
+const DarkModeToggle: React.FC<DarkModeToggleProps> = ({ isHidden }) => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -40,15 +44,25 @@ const DarkModeToggle = () => {
   }, [isDark]);
 
   return (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="p-2 alternate"
-      onClick={() => setIsDark(!isDark)}
-    >
-      {isDark ? <UilMoon /> : <UilSun />}
-    </motion.button>
+    <>
+      {isHidden ? (
+        <></>
+      ) : (
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="p-2 alternate"
+          onClick={() => setIsDark(!isDark)}
+        >
+          {isDark ? <UilMoon /> : <UilSun />}
+        </motion.button>
+      )}
+    </>
   );
+};
+
+DarkModeToggle.defaultProps = {
+  isHidden: false,
 };
 
 export default DarkModeToggle;

@@ -29,9 +29,9 @@ const Button: React.FC<ButtonProps> = ({
         type={type}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className={`${className} ${variant} ${
+        className={`${variant} ${
           isGhost ? "ghost" : ""
-        }  flex items-center justify-center relative`}
+        }  flex items-center justify-center relative ${className}`}
         onClick={onClick}
         aria-busy={isLoading}
       >
