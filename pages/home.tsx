@@ -1,8 +1,16 @@
+import React, { useEffect, useState } from "react";
+
+import ActionBar from "../components/action-bar";
 import type { NextPage } from "next";
-import React from "react";
 
 const Home: NextPage = () => {
-  return <div></div>;
+  const [showActionBar, setShowActionBar] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setShowActionBar(true);
+    }, 5000);
+  }, []);
+  return <div>{showActionBar && <ActionBar />}</div>;
 };
 
 export default Home;
