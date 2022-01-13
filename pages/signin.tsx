@@ -1,6 +1,7 @@
 import { FormEventHandler, useEffect, useState } from "react";
 import { useToastStore, useUserStore } from "../store";
 
+import { Account } from "../models";
 import Button from "../components/button";
 import Link from "next/link";
 import { NextPage } from "next";
@@ -13,7 +14,10 @@ const SignIn: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
-  const { setUser } = useUserStore((state) => ({ setUser: state.setUser }));
+  const { setAccount, setUser } = useUserStore((state) => ({
+    setAccount: state.setAccount,
+    setUser: state.setUser,
+  }));
 
   useEffect(() => {
     if (router.query.email) {
@@ -41,6 +45,18 @@ const SignIn: NextPage = () => {
         setIsLoading(false);
       } else {
         setUser(user!);
+        const { data, error } = await supabase
+          .from<Account>("accounts")
+          .select("firstName, lastName, email, created_at")
+          .eq("user", user!.id);
+        if (data) {
+          setAccount(data[0]);
+        } else if (error) {
+          console.log(error);
+          setAccount(null);
+        } else {
+          setAccount(null);
+        }
         await fetch("/api/auth/set", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
