@@ -13,7 +13,7 @@ p {
 }
 
 .card {
-  @apply p-4 md:p-8 space-y-4 overflow-hidden bg-white shadow-lg rounded-xl text-zinc-800;
+  @apply p-4 space-y-4 overflow-hidden bg-white shadow-lg md:p-8 rounded-xl text-zinc-800;
   @apply dark:bg-zinc-800 dark:text-zinc-100;
 }
 
@@ -22,7 +22,7 @@ p {
 }
 
 .card > header {
-  @apply pb-4 px-4 md:pb-8 md:px-8;
+  @apply px-4 pb-4 md:pb-8 md:px-8;
 }
 
 button.primary {
@@ -64,6 +64,11 @@ button.alternate {
 
 fieldset {
   @apply space-y-2;
+}
+
+.required::after {
+  content: " *";
+  @apply text-red-600;
 }
 
 label {

@@ -11,6 +11,7 @@ export interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   scaleOnHover?: boolean;
   className?: string;
+  tabIndex?: number;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -20,6 +21,7 @@ const Button: React.FC<ButtonProps> = ({
   isLoading,
   onClick,
   scaleOnHover,
+  tabIndex,
   type,
   variant,
 }) => {
@@ -34,6 +36,7 @@ const Button: React.FC<ButtonProps> = ({
         }  flex items-center justify-center relative ${className}`}
         onClick={onClick}
         aria-busy={isLoading}
+        tabIndex={tabIndex}
       >
         {isLoading && (
           <Loader
@@ -76,6 +79,7 @@ Button.defaultProps = {
   onClick: () => null,
   scaleOnHover: false,
   className: "",
+  tabIndex: 0,
 };
 
 export default Button;
