@@ -1,15 +1,22 @@
 import { SetState, State } from "zustand";
 
+import { Account } from "../models";
 import type { User } from "@supabase/supabase-js";
 
 export interface UserState extends State {
+  account: Account | null;
   user: User | null;
-  setUser: (userObj: User) => void;
+  setAccount: (accountObj: Account | null) => void;
+  setUser: (userObj: User | null) => void;
 }
 
 const UserStore = (set: SetState<UserState>) => ({
+  account: null,
   user: null,
-  setUser: (userObj: User) => {
+  setAccount: (accountObj: Account | null) => {
+    set((state) => ({ ...state, account: accountObj }));
+  },
+  setUser: (userObj: User | null) => {
     set((state) => ({ ...state, user: userObj }));
   },
 });
