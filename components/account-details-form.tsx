@@ -12,9 +12,11 @@ interface AccountDetailsFormProps {
     lastName: string;
     togglToken: string;
   }) => void;
+  isLoading: boolean;
 }
 
 const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({
+  isLoading,
   user,
   onSubmit,
 }) => {
@@ -96,7 +98,13 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({
         </div>
         <input type="text" name="togglToken" id="togglToken" aria-required />
       </fieldset>
-      <Button type="submit" variant="primary" className="w-full" scaleOnHover>
+      <Button
+        type="submit"
+        variant="primary"
+        className="w-full"
+        scaleOnHover
+        isLoading={isLoading}
+      >
         Save
       </Button>
     </form>

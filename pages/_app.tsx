@@ -2,8 +2,10 @@ import "../public/tailwind.css";
 
 import { useEffect, useState } from "react";
 
+import { Account } from "../models";
+import AccountNav from "../components/account-nav";
 import type { AppProps } from "next/app";
-import DarkModeToggle from "../components/dark-mode-toggle";
+import ThemeToggle from "../components/theme-toggle";
 import Toaster from "../components/toaster";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabaseClient";
@@ -12,8 +14,9 @@ import { useUserStore } from "../store";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [hideDarkModeToggle, setHideDarkModeToggle] = useState(false);
-  const { user, setUser } = useUserStore((state) => ({
+  const { user, setAccount, setUser } = useUserStore((state) => ({
     user: state.user,
+    setAccount: state.setAccount,
     setUser: state.setUser,
   }));
 
@@ -38,12 +41,27 @@ function MyApp({ Component, pageProps }: AppProps) {
       "/",
     ].includes(router.pathname);
     setHideDarkModeToggle(!isAuthPage);
+    if (isAuthPage) {
+      window.document.querySelector("html")?.classList.add("pattern");
+    } else {
+      window.document.querySelector("html")?.classList.remove("pattern");
+    }
     if (!user && !isAuthPage) {
       fetch("/api/auth/user")
         .then(async (res) => {
           if (res.ok) {
-            const data: User = await res.json();
-            setUser(data);
+            const userData: User = await res.json();
+            if (userData) {
+              const { data: accountData, error } = await supabase
+                .from<Account>("accounts")
+                .select("*")
+                .eq("user", userData.id)
+                .single();
+              if (accountData) {
+                setAccount(accountData);
+              }
+            }
+            setUser(userData);
           } else {
             setUser(null);
           }
@@ -52,14 +70,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           console.log(err);
         });
     }
-  }, [router.pathname, user, setUser]);
+  }, [router.pathname, user, setUser, setAccount]);
 
   return (
     <>
       <Component {...pageProps} />
       <Toaster />
+      <AccountNav />
       <div className="fixed bottom-4 right-4">
-        <DarkModeToggle isHidden={hideDarkModeToggle} />
+        <ThemeToggle isHidden={hideDarkModeToggle} />
       </div>
     </>
   );
