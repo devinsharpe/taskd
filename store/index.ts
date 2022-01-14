@@ -3,6 +3,7 @@ import {
   StoreApiWithSubscribeWithSelector,
   devtools,
 } from "zustand/middleware";
+import ThemeStore, { ThemeState } from "./theme";
 import ToastStore, { ToastState } from "./toast";
 import UserStore, { UserState } from "./user";
 import create, { GetState, SetState } from "zustand";
@@ -13,6 +14,12 @@ export const useAPIStore = create<
   GetState<APIState>,
   StoreApiWithSubscribeWithSelector<APIState>
 >(devtools(APIStore, { name: "API" }));
+export const useThemeStore = create<
+  ThemeState,
+  SetState<ThemeState>,
+  GetState<ThemeState>,
+  StoreApiWithSubscribeWithSelector<ThemeState>
+>(devtools(ThemeStore, { name: "Theme" }));
 export const useToastStore = create<
   ToastState,
   SetState<ToastState>,

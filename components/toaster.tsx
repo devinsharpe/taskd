@@ -24,7 +24,7 @@ const Toaster: React.FC = () => {
   return (
     <>
       <AnimateSharedLayout>
-        <motion.div layout className="fixed flex flex-col bottom-4 left-4">
+        <motion.div layout className="fixed z-50 flex flex-col bottom-4 left-4">
           <AnimatePresence initial={false} exitBeforeEnter={false}>
             {messages.map((message, index) => (
               <Toast
