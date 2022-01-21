@@ -12,6 +12,11 @@ import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
 import { useUserStore } from "../store";
 
+export enum SoundEffects {
+  clickError = "sound-click-error",
+  clickSelect = "sound-click-select",
+}
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [hideDarkModeToggle, setHideDarkModeToggle] = useState(false);
   const { user, setAccount, setUser } = useUserStore((state) => ({
@@ -74,6 +79,16 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <audio
+        src="/sounds/mixkit-click-error-1110.wav"
+        autoPlay={false}
+        id="sound-click-error"
+      />
+      <audio
+        src="/sounds/mixkit-select-click-1109.wav"
+        autoPlay={false}
+        id="sound-click-select"
+      />
       <Component {...pageProps} />
       <Toaster />
       <AccountNav />

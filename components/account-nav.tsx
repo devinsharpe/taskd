@@ -5,10 +5,14 @@ import {
   UilSetting,
   UilSignOutAlt,
   UilSun,
+  UilVolume,
+  UilVolumeMute,
 } from "@iconscout/react-unicons";
 import { useThemeStore, useUserStore } from "../store";
 
+import { SoundEffects } from "../pages/_app";
 import { useRouter } from "next/router";
+import useSoundEffect from "../hooks/useSoundEffect";
 
 const variants = {
   initial: {
@@ -54,6 +58,7 @@ const buttonVariants = {
 
 const AccountNav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSoundDisabled, setIsSoundDisabled] = useState(false);
   const [closeTimeout, setCloseTimeout] = useState<number>(0);
   const { account, setAccount, setUser } = useUserStore((state) => ({
     account: state.account,
@@ -67,12 +72,21 @@ const AccountNav = () => {
 
   const settingsRef = useRef<HTMLButtonElement>(null);
   const themeRef = useRef<HTMLButtonElement>(null);
+  const volumeRef = useRef<HTMLButtonElement>(null);
   const signoutRef = useRef<HTMLButtonElement>(null);
 
+  const { playSoundEffect } = useSoundEffect();
   const router = useRouter();
 
   useEffect(() => {
     if (isOpen && typeof window !== "undefined") {
+      const storedSoundSetting = localStorage.getItem("taskd-disable-sound") as
+        | "true"
+        | "false"
+        | null;
+      if (storedSoundSetting) {
+        setIsSoundDisabled(JSON.parse(storedSoundSetting));
+      }
       if (settingsRef.current) {
         settingsRef.current.focus();
       }
@@ -83,6 +97,16 @@ const AccountNav = () => {
       );
     }
   }, [isOpen, setCloseTimeout]);
+
+  const toggleSoundSetting = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "taskd-disable-sound",
+        JSON.stringify(!isSoundDisabled)
+      );
+    }
+    setIsSoundDisabled(!isSoundDisabled);
+  };
 
   const signout = async () => {
     const res = await fetch("/api/auth/remove");
@@ -105,7 +129,14 @@ const AccountNav = () => {
           className="z-20 flex items-center justify-center p-4 bg-white border-2 rounded-full shadow-lg dark:bg-zinc-800 aspect-square focus:outline-none focus:border-black dark:focus:border-white"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            if (isOpen) {
+              playSoundEffect(SoundEffects.clickError);
+            } else {
+              playSoundEffect(SoundEffects.clickSelect);
+            }
+            setIsOpen(!isOpen);
+          }}
         >
           <p className="font-semibold">
             {`${account.firstName.charAt(0)}${account.lastName.charAt(
@@ -139,6 +170,16 @@ const AccountNav = () => {
                 >
                   {theme === "dark" ? <UilMoon /> : <UilSun />}
                   <span>Color Theme</span>
+                </button>
+              </motion.li>
+              <motion.li variants={childrenVariants}>
+                <button
+                  className="flex items-center w-full p-2 space-x-2 rounded hover:bg-zinc-100 dark:hover:bg-zinc-500 focus:ring-2 focus:ring-zinc-300 focus:outline-none dark:focus:ring-zinc-500"
+                  ref={volumeRef}
+                  onClick={toggleSoundSetting}
+                >
+                  {isSoundDisabled ? <UilVolumeMute /> : <UilVolume />}
+                  <span>Sound Effects</span>
                 </button>
               </motion.li>
               <motion.li variants={childrenVariants}>
