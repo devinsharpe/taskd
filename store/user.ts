@@ -1,6 +1,6 @@
 import { SetState, State } from "zustand";
 
-import { Account } from "../models";
+import { Account } from "../types/models";
 import type { User } from "@supabase/supabase-js";
 
 export interface UserState extends State {
@@ -15,6 +15,9 @@ const UserStore = (set: SetState<UserState>) => ({
   user: null,
   setAccount: (accountObj: Account | null) => {
     set((state) => ({ ...state, account: accountObj }));
+    if (accountObj && typeof window !== "undefined") {
+      window.sessionStorage.setItem("taskd-toggl-token", accountObj.togglToken);
+    }
   },
   setUser: (userObj: User | null) => {
     set((state) => ({ ...state, user: userObj }));

@@ -5,6 +5,7 @@ import {
 } from "zustand/middleware";
 import ThemeStore, { ThemeState } from "./theme";
 import ToastStore, { ToastState } from "./toast";
+import TogglStore, { TogglState } from "./toggl";
 import UserStore, { UserState } from "./user";
 import create, { GetState, SetState } from "zustand";
 
@@ -26,6 +27,12 @@ export const useToastStore = create<
   GetState<ToastState>,
   StoreApiWithSubscribeWithSelector<ToastState>
 >(devtools(ToastStore, { name: "Toaster" }));
+export const useTogglStore = create<
+  TogglState,
+  SetState<TogglState>,
+  GetState<TogglState>,
+  StoreApiWithSubscribeWithSelector<TogglState>
+>(devtools(TogglStore, { name: "Toggl" }));
 export const useUserStore = create<
   UserState,
   SetState<UserState>,
