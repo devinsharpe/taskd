@@ -12,7 +12,7 @@ export interface TogglUser {
   language: string;
   image_url: string;
   sidebar_piechart: boolean;
-  at: Date;
+  readonly at: Date;
   new_blog_post: {
     title: string;
     url: string;
@@ -27,13 +27,14 @@ export interface TogglUser {
 export interface TimeEntry {
   id?: number;
   wid: number;
-  billable: boolean;
-  start: Date;
-  stop: Date;
-  duration: number;
-  description: string;
+  pid: number;
+  start?: string;
+  stop?: string;
+  readonly duration?: number;
+  created_with: string;
   tags: string[];
-  at: Date;
+  duronly: boolean;
+  readonly at: Date;
 }
 
 export interface Project {
@@ -44,10 +45,19 @@ export interface Project {
   active: boolean;
   is_private: boolean;
   template?: boolean;
-  template_id?: boolean;
-  at?: Date;
+  template_id?: number;
+  readonly at?: Date;
   color: string;
-  created_at: Date;
+  readonly created_at: Date;
+}
+
+export interface ProjectUser {
+  id?: number;
+  pid: number;
+  wid: number;
+  uid: number;
+  manager: boolean;
+  readonly at?: Date;
 }
 
 export interface Tag {
@@ -60,7 +70,26 @@ export interface Workspace {
   id?: number;
   name: string;
   premium: boolean;
-  at: Date;
+  admin: boolean;
+  only_admins_may_create_projects: boolean;
+  rounded: -1 | 0 | 1;
+  rounding_minutes: number;
+  readonly at: Date;
+}
+
+export interface WorkspaceGroup {
+  id?: number;
+  wid: number;
+  name: string;
+  readonly at: Date;
+}
+
+export interface WorkspaceUser {
+  id: number;
+  uid: number;
+  admin: boolean;
+  active: boolean;
+  invite_url: string;
 }
 
 export interface Client {
@@ -68,7 +97,7 @@ export interface Client {
   wid: number;
   name: string;
   notes?: string;
-  at?: Date;
+  readonly at: Date;
 }
 
 export interface TogglUserWithRelatedData extends TogglUser {
