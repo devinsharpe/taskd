@@ -35,7 +35,7 @@ const setToken = (token: string) => {
 const authenticate = async (
   token: string,
   withRelatedData: boolean = false
-): Promise<{ since: Date; data: TogglUserWithRelatedData } | undefined> => {
+): Promise<TogglUserWithRelatedData | undefined> => {
   if (typeof window !== "undefined") {
     setToken(token);
     const res = await fetch(
@@ -52,7 +52,7 @@ const authenticate = async (
         since: Date;
         data: TogglUserWithRelatedData;
       };
-      return data;
+      return data.data;
     }
   }
   return undefined;

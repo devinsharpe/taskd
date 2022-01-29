@@ -31,6 +31,7 @@ export interface TimeEntry {
   start?: string;
   stop?: string;
   readonly duration?: number;
+  description: string;
   created_with: string;
   tags: string[];
   duronly: boolean;
