@@ -1,19 +1,24 @@
 import { FormEventHandler, useEffect, useState } from "react";
-import { useToastStore, useUserStore } from "../store";
+import { useToastStore, useTogglStore, useUserStore } from "../store";
 
-import { Account } from "../models";
+import { Account } from "../types/models";
 import Button from "../components/button";
 import Link from "next/link";
 import { NextPage } from "next";
 import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
+import useToggl from "../hooks/useToggl";
 
 const SignIn: NextPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { authenticate } = useToggl();
   const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
+  const { setTogglUser } = useTogglStore((state) => ({
+    setTogglUser: state.setTogglUser,
+  }));
   const { setAccount, setUser } = useUserStore((state) => ({
     setAccount: state.setAccount,
     setUser: state.setUser,
@@ -47,10 +52,14 @@ const SignIn: NextPage = () => {
         setUser(user!);
         const { data, error } = await supabase
           .from<Account>("accounts")
-          .select("firstName, lastName, email, created_at")
+          .select("firstName, lastName, email, created_at, togglToken")
           .eq("user", user!.id);
         if (data) {
           setAccount(data[0]);
+          const togglUser = await authenticate(data[0].togglToken, true);
+          if (togglUser) {
+            setTogglUser(togglUser);
+          }
         } else if (error) {
           console.log(error);
           setAccount(null);

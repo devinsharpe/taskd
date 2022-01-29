@@ -2,7 +2,7 @@ import "../public/tailwind.css";
 
 import { useEffect, useState } from "react";
 
-import { Account } from "../models";
+import { Account } from "../types/models";
 import AccountNav from "../components/account-nav";
 import type { AppProps } from "next/app";
 import ThemeToggle from "../components/theme-toggle";
@@ -10,7 +10,8 @@ import Toaster from "../components/toaster";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
-import { useUserStore } from "../store";
+import { useTogglStore, useUserStore } from "../store";
+import useToggl from "../hooks/useToggl";
 
 export enum SoundEffects {
   clickError = "sound-click-error",
@@ -24,10 +25,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     setAccount: state.setAccount,
     setUser: state.setUser,
   }));
+  const { authenticate } = useToggl();
+  const { setTogglUser } = useTogglStore((state) => ({
+    setTogglUser: state.setTogglUser,
+  }));
 
   const router = useRouter();
   if (typeof window !== "undefined") {
-    console.log(router.pathname);
     if (
       router.pathname !== "reset" &&
       window.location.href.includes("type=recovery")
@@ -64,6 +68,13 @@ function MyApp({ Component, pageProps }: AppProps) {
                 .single();
               if (accountData) {
                 setAccount(accountData);
+                const togglUser = await authenticate(
+                  accountData.togglToken,
+                  true
+                );
+                if (togglUser) {
+                  setTogglUser(togglUser);
+                }
               }
             }
             setUser(userData);
@@ -75,7 +86,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           console.log(err);
         });
     }
-  }, [router.pathname, user, setUser, setAccount]);
+  }, [router.pathname, user, setUser, setAccount, authenticate, setTogglUser]);
 
   return (
     <>
