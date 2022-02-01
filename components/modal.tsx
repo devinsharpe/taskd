@@ -1,10 +1,10 @@
 import { AnimatePresence, Variants, motion } from "framer-motion";
 
-import Button from "./button";
 import React from "react";
 import { UilTimes } from "@iconscout/react-unicons";
 
 interface ModalProps {
+  className: string;
   title: string;
   isClosable: boolean;
   isOpen: boolean;
@@ -37,6 +37,7 @@ const variants = {
 } as Variants;
 
 const Modal: React.FC<ModalProps> = ({
+  className,
   isClosable,
   isOpen,
   onClose,
@@ -48,7 +49,7 @@ const Modal: React.FC<ModalProps> = ({
       {isOpen && (
         <>
           <motion.aside
-            className="fixed inset-0 z-50 w-5/6 p-8 m-auto mx-auto space-y-4 transition-opacity duration-500 bg-white border shadow-xl dark:bg-zinc-800 h-min md:w-1/2 rounded-xl border-zinc-800"
+            className={`fixed inset-0 z-50 w-5/6 p-8 m-auto mx-auto space-y-4 transition-opacity duration-500 bg-white border shadow-xl dark:bg-zinc-800 h-min md:w-1/2 rounded-xl border-zinc-800 ${className}`}
             variants={variants}
             initial="dialogInitial"
             animate="dialogVisible"
