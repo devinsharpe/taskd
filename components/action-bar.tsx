@@ -2,6 +2,7 @@ import { AnimatePresence, Variants, motion } from "framer-motion";
 import React, { useState } from "react";
 import {
   UilBars,
+  UilCalendarAlt,
   UilClipboard,
   UilDiary,
   UilStopwatch,
@@ -32,7 +33,7 @@ const taskBtnVariants = {
     opacity: 0,
   },
   pos1: {
-    x: -72,
+    x: "-150%",
     y: 0,
     opacity: 1,
     transition: {
@@ -41,8 +42,8 @@ const taskBtnVariants = {
     },
   },
   pos2: {
-    x: -32,
-    y: -64,
+    x: "-105%",
+    y: "-105%",
     opacity: 1,
     transition: {
       delay: 0.05,
@@ -51,8 +52,8 @@ const taskBtnVariants = {
     },
   },
   pos3: {
-    x: 40,
-    y: -64,
+    x: 0,
+    y: "-145%",
     opacity: 1,
     transition: {
       delay: 0.1,
@@ -61,7 +62,17 @@ const taskBtnVariants = {
     },
   },
   pos4: {
-    x: 72,
+    x: "105%",
+    y: "-105%",
+    opacity: 1,
+    transition: {
+      delay: 0.15,
+      duration: 0.2,
+      ease: "easeInOut",
+    },
+  },
+  pos5: {
+    x: "150%",
     y: 0,
     opacity: 1,
     transition: {
@@ -134,6 +145,7 @@ const ActionBar = () => {
               exit="hidden"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-blue-400 dark:focus:border-blue-400 bottom-4 focus:ring-4 focus:ring-blue-400/50 hover:text-blue-600 dark:hover:text-blue-400 focus:text-blue-600 dark:focus:text-blue-400"
             >
               <UilClipboard />
@@ -145,6 +157,7 @@ const ActionBar = () => {
               exit="hidden"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-violet-400 dark:focus:border-violet-400 bottom-4 focus:ring-4 focus:ring-violet-400/50 hover:text-violet-600 dark:hover:text-violet-400 focus:text-violet-600 dark:focus:text-violet-400"
             >
               <UilStopwatch />
@@ -156,6 +169,7 @@ const ActionBar = () => {
               exit="hidden"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-emerald-400 dark:focus:emerald-400 bottom-4 focus:ring-4 focus:ring-emerald-400/50 hover:text-emerald-600 dark:hover:text-emerald-400 focus:text-emerald-600 dark:focus:text-emerald-400"
             >
               <UilDiary />
@@ -167,9 +181,22 @@ const ActionBar = () => {
               exit="hidden"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-amber-400 dark:focus:border-amber-400 bottom-4 focus:ring-4 focus:ring-amber-400/50 hover:text-amber-600 dark:hover:text-amber-400 focus:text-amber-600 dark:focus:text-amber-400"
             >
               <UilUsersAlt />
+            </motion.button>
+            <motion.button
+              variants={taskBtnVariants}
+              initial="hidden"
+              animate="pos5"
+              exit="hidden"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              style={{ originX: 0.5, originY: 0.5 }}
+              className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-teal-400 dark:focus:border-teal-400 bottom-4 focus:ring-4 focus:ring-teal-400/50 hover:text-teal-600 dark:hover:text-teal-400 focus:text-teal-600 dark:focus:text-teal-400"
+            >
+              <UilCalendarAlt />
             </motion.button>
           </>
         )}
