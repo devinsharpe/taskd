@@ -52,11 +52,11 @@ const ProjectsWidget: React.FC = () => {
 
   return (
     <section className="box-border w-full mb-4 space-y-4 overflow-hidden md:mx-4 break-inside group">
-      <div className="flex items-center justify-between p-4 pb-2 space-x-2">
+      <div className="items-center justify-between p-4 pb-2 space-y-4 md:space-x-2 md:flex md:space-y-0">
         <h4 className="text-4xl font-bold transition-colors duration-300 group-hover:text-emerald-600">
           Projects.
         </h4>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between space-x-2 md:justify-end">
           <select
             name="client-choices"
             id="client-choices"
@@ -76,26 +76,28 @@ const ProjectsWidget: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4 px-2 pb-4">
+      <div className="px-2 pb-4 space-y-4">
         {projects.length ? (
           <>
             {filteredProjects.slice((page - 1) * 6, page * 6).map((project) => (
               <article
                 key={project.id!}
-                className="relative flex flex-col items-start justify-start h-48 p-4 overflow-hidden bg-white border-2 border-white rounded-lg shadow dark:bg-zinc-800 dark:border-zinc-800 hover:border-black dark:hover:border-white group"
+                className="relative flex items-center justify-between px-4 py-2 overflow-hidden bg-white border-2 border-white rounded-lg shadow dark:bg-zinc-800 dark:border-zinc-800 hover:border-black dark:hover:border-white group"
               >
-                <h4 className="z-10 text-xl font-semibold md:text-2xl">
-                  {project.name}
-                </h4>
-                {project.cid && clientsMap[project.cid] && (
-                  <h5 className="text-sm">{clientsMap[project.cid].name}</h5>
-                )}
-                <div className="flex items-end justify-center flex-grow w-full space-x-4">
-                  <button className="flex items-center justify-center p-2 border border-black rounded-full dark:text-white dark:border-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                    <UilPlay />
-                  </button>
-                  <button className="flex items-center justify-center p-2 border border-black rounded-full dark:text-white dark:border-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                <div className="flex-grow w-full">
+                  <h4 className="z-10 text-xl font-semibold md:text-2xl">
+                    {project.name}
+                  </h4>
+                  {project.cid && clientsMap[project.cid] && (
+                    <h5 className="text-sm">{clientsMap[project.cid].name}</h5>
+                  )}
+                </div>
+                <div className="flex items-end justify-end flex-grow-0 w-full space-x-4">
+                  <button className="flex items-center justify-center p-2 border border-black rounded-lg dark:text-white dark:border-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
                     <UilEditAlt />
+                  </button>
+                  <button className="flex items-center justify-center p-2 border border-black rounded-lg dark:text-white dark:border-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                    <UilPlay />
                   </button>
                 </div>
               </article>
