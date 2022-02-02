@@ -4,7 +4,7 @@ import React from "react";
 import { UilTimes } from "@iconscout/react-unicons";
 
 interface ModalProps {
-  className: string;
+  className?: string;
   title: string;
   isClosable: boolean;
   isOpen: boolean;
@@ -18,7 +18,7 @@ const variants = {
   },
   dialogVisible: {
     y: 0,
-    opacity: 100,
+    opacity: 1,
     transition: {
       duration: 0.5,
       ease: "easeInOut",
@@ -28,7 +28,7 @@ const variants = {
     opacity: 0,
   },
   overlayVisible: {
-    opacity: 50,
+    opacity: 1,
     transition: {
       duration: 0.25,
       ease: "easeOut",
@@ -49,7 +49,7 @@ const Modal: React.FC<ModalProps> = ({
       {isOpen && (
         <>
           <motion.aside
-            className={`fixed inset-0 z-50 w-5/6 p-8 m-auto mx-auto space-y-4 transition-opacity duration-500 bg-white border shadow-xl dark:bg-zinc-800 h-min md:w-1/2 rounded-xl border-zinc-800 ${className}`}
+            className={`fixed max-h-[calc(100vh-4rem)] my-auto overflow-y-auto inset-0 z-50 w-5/6 p-8 m-auto mx-auto space-y-4 bg-white border-2 shadow-xl dark:bg-zinc-800 h-min md:w-1/2 rounded-xl border-zinc-800 ${className}`}
             variants={variants}
             initial="dialogInitial"
             animate="dialogVisible"
@@ -57,9 +57,12 @@ const Modal: React.FC<ModalProps> = ({
             role="dialog"
           >
             <div className="flex items-center justify-between w-full">
-              <h2 className="text-2xl font-semibold text-zinc-800">{title}</h2>
+              <h2 className="text-2xl font-semibold ">{title}</h2>
               {isClosable && (
-                <button className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 dark:text-white">
+                <button
+                  className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-white"
+                  onClick={onClose}
+                >
                   <UilTimes />
                 </button>
               )}
@@ -72,11 +75,20 @@ const Modal: React.FC<ModalProps> = ({
             initial="overlayInitial"
             animate="overlayVisible"
             exit="overlayInitial"
+            onClick={() => {
+              if (isClosable) {
+                onClose();
+              }
+            }}
           />
         </>
       )}
     </AnimatePresence>
   );
+};
+
+Modal.defaultProps = {
+  className: "",
 };
 
 export default Modal;
