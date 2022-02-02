@@ -41,7 +41,7 @@ const CurrentTimeEntry = () => {
   useInterval(async () => {
     const entry = await timeEntry.current();
     setCurrentEntry(entry || null);
-  }, 3600);
+  }, 10000);
 
   const stopEntry = async () => {
     if (currentEntry) {
