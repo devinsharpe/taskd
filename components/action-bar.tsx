@@ -83,7 +83,19 @@ const taskBtnVariants = {
   },
 } as Variants;
 
-const ActionBar = () => {
+export enum Actions {
+  client = "CLIENT",
+  event = "EVENT",
+  project = "PROJECT",
+  task = "TASK",
+  timeEntry = "TIME_ENTRY",
+}
+
+interface ActionBarProps {
+  handleActionRequest: (action: Actions) => void;
+}
+
+const ActionBar: React.FC<ActionBarProps> = ({ handleActionRequest }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { playSoundEffect } = useSoundEffect();
 
@@ -147,6 +159,7 @@ const ActionBar = () => {
               whileTap={{ scale: 0.98 }}
               style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-blue-400 dark:focus:border-blue-400 bottom-4 focus:ring-4 focus:ring-blue-400/50 hover:text-blue-600 dark:hover:text-blue-400 focus:text-blue-600 dark:focus:text-blue-400"
+              onClick={() => handleActionRequest(Actions.task)}
             >
               <UilClipboard />
             </motion.button>
@@ -159,6 +172,7 @@ const ActionBar = () => {
               whileTap={{ scale: 0.98 }}
               style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-violet-400 dark:focus:border-violet-400 bottom-4 focus:ring-4 focus:ring-violet-400/50 hover:text-violet-600 dark:hover:text-violet-400 focus:text-violet-600 dark:focus:text-violet-400"
+              onClick={() => handleActionRequest(Actions.timeEntry)}
             >
               <UilStopwatch />
             </motion.button>
@@ -171,6 +185,7 @@ const ActionBar = () => {
               whileTap={{ scale: 0.98 }}
               style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-emerald-400 dark:focus:emerald-400 bottom-4 focus:ring-4 focus:ring-emerald-400/50 hover:text-emerald-600 dark:hover:text-emerald-400 focus:text-emerald-600 dark:focus:text-emerald-400"
+              onClick={() => handleActionRequest(Actions.project)}
             >
               <UilDiary />
             </motion.button>
@@ -183,6 +198,7 @@ const ActionBar = () => {
               whileTap={{ scale: 0.98 }}
               style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-amber-400 dark:focus:border-amber-400 bottom-4 focus:ring-4 focus:ring-amber-400/50 hover:text-amber-600 dark:hover:text-amber-400 focus:text-amber-600 dark:focus:text-amber-400"
+              onClick={() => handleActionRequest(Actions.client)}
             >
               <UilUsersAlt />
             </motion.button>
@@ -195,6 +211,7 @@ const ActionBar = () => {
               whileTap={{ scale: 0.98 }}
               style={{ originX: 0.5, originY: 0.5 }}
               className="fixed left-0 right-0 z-10 flex items-center justify-center p-4 mx-auto bg-white border-2 rounded-full shadow-md dark:text-white dark:bg-zinc-800 aspect-square focus:outline-none focus:border-teal-400 dark:focus:border-teal-400 bottom-4 focus:ring-4 focus:ring-teal-400/50 hover:text-teal-600 dark:hover:text-teal-400 focus:text-teal-600 dark:focus:text-teal-400"
+              onClick={() => handleActionRequest(Actions.event)}
             >
               <UilCalendarAlt />
             </motion.button>
