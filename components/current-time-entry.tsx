@@ -1,12 +1,12 @@
 import { Project, TimeEntry } from "../types/toggl";
-import { useEffect, useState } from "react";
 import { UilPause, UilPlay, UilStopwatch } from "@iconscout/react-unicons";
+import { useEffect, useState } from "react";
 
 import Button from "./button";
+import { differenceInSeconds } from "date-fns";
+import useInterval from "../hooks/useInterval";
 import useToggl from "../hooks/useToggl";
 import { useTogglStore } from "../store";
-import useInterval from "../hooks/useInterval";
-import { differenceInSeconds } from "date-fns";
 
 const CurrentTimeEntry = () => {
   const { timeEntry } = useToggl();
