@@ -13,16 +13,16 @@ interface ModalProps {
 
 const variants = {
   dialogInitial: {
-    y: 16,
+    y: 32,
     opacity: 0,
   },
   dialogVisible: {
     y: 0,
     opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: "easeInOut",
-    },
+  },
+  transition: {
+    duration: 0.5,
+    ease: "easeInOut",
   },
   overlayInitial: {
     opacity: 0,
@@ -30,7 +30,7 @@ const variants = {
   overlayVisible: {
     opacity: 1,
     transition: {
-      duration: 0.25,
+      duration: 0.5,
       ease: "easeOut",
     },
   },
@@ -55,6 +55,7 @@ const Modal: React.FC<ModalProps> = ({
             animate="dialogVisible"
             exit="dialogInitial"
             role="dialog"
+            transition={variants.transition}
           >
             <div className="flex items-center justify-between w-full">
               <h2 className="text-2xl font-semibold ">{title}</h2>
@@ -75,6 +76,7 @@ const Modal: React.FC<ModalProps> = ({
             initial="overlayInitial"
             animate="overlayVisible"
             exit="overlayInitial"
+            transition={variants.transition}
             onClick={() => {
               if (isClosable) {
                 onClose();
