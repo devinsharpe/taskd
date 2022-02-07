@@ -32,8 +32,16 @@ const ThemeStore = (set: SetState<ThemeState>, get: GetState<ThemeState>) => ({
       localStorage.setItem("taskd-theme", themeString);
       if (themeString === "dark") {
         window.document.querySelector("html")!.classList.add("dark");
+        document.documentElement.style.setProperty(
+          "--datepicker-indicator-invet-val",
+          "1"
+        );
       } else {
         window.document.querySelector("html")!.classList.remove("dark");
+        document.documentElement.style.setProperty(
+          "--datepicker-indicator-invet-val",
+          "0"
+        );
       }
     }
   },

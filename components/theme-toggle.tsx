@@ -15,8 +15,6 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ isHidden }) => {
     setTheme: state.setTheme,
   }));
 
-  const [isDark, setIsDark] = useState(false);
-
   useEffect(() => {
     setTheme(checkTheme());
     window
