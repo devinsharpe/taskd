@@ -14,14 +14,16 @@ const ProjectForm = () => {
           Name
         </label>
         <input
+          type="text"
           name="name"
           id="project-name"
-          className="w-full px-3 py-2 border rounded focus:outline-emerald-400 dark:bg-white border-zinc-600"
+          placeholder="Your Next Distraction"
+          className="w-full focus:ring-emerald-400 focus:border-emerald-400"
         />
       </fieldset>
       <fieldset>
         <label
-          htmlFor=""
+          htmlFor="project-client"
           className="text-lg font-semibold text-zinc-800 dark:text-white"
         >
           Client
@@ -29,7 +31,7 @@ const ProjectForm = () => {
         <select
           name="client"
           id="project-client"
-          className="w-full rounded focus:ring-emerald-400 focus:border-emerald-400"
+          className="w-full focus:ring-emerald-400 focus:border-emerald-400"
           defaultValue="NONE"
         >
           <option value="NONE">None</option>

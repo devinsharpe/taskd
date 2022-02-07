@@ -23,7 +23,9 @@ const TaskForm = () => {
           <input
             name="title"
             id="task-title"
-            className="w-full px-3 py-2 border rounded focus:outline-blue-400 dark:bg-white border-zinc-600"
+            type="text"
+            placeholder="Client Meeting"
+            className="w-full focus:ring-blue-400 focus:border-blue-400"
           />
         </fieldset>
         <fieldset className="w-full">
@@ -36,7 +38,7 @@ const TaskForm = () => {
           <select
             name="pid"
             id="task-project"
-            className="w-full px-3 py-2 border rounded focus:outline-blue-400 dark:bg-white border-zinc-600"
+            className="w-full focus:ring-blue-400 focus:border-blue-400"
           >
             <option value="-1">None</option>
             {projects.map((project) => (
@@ -56,19 +58,21 @@ const TaskForm = () => {
           <textarea
             name="notes"
             id="task-notes"
-            className="w-full px-3 py-2 border rounded focus:outline-blue-400 dark:bg-white border-zinc-600"
+            className="w-full focus:ring-blue-400 focus:border-blue-400"
           />
         </fieldset>
         <fieldset className="w-full">
           <label
             htmlFor="task-due-date"
             className="text-lg font-semibold text-zinc-800 dark:text-white"
-          ></label>
+          >
+            Due Date
+          </label>
           <input
             name="dueDate"
             id="task-due-date"
             type="date"
-            className="w-full px-3 py-2 border rounded focus:outline-blue-400 dark:bg-white border-zinc-600"
+            className="w-full focus:ring-blue-400 focus:border-blue-400"
           />
         </fieldset>
       </section>

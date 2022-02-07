@@ -5,21 +5,31 @@ const ClientForm = () => {
     <form className="w-full space-y-4" onSubmit={(e) => e.preventDefault()}>
       <fieldset>
         <label
-          htmlFor=""
+          htmlFor="client-name"
           className="text-lg font-semibold text-zinc-800 dark:text-white"
         >
           Name
         </label>
-        <input className="w-full px-3 py-2 border rounded focus:outline-amber-400 dark:bg-white border-zinc-600" />
+        <input
+          placeholder="Local Business"
+          name="name"
+          id="client-name"
+          type="text"
+          className="w-full focus:ring-amber-400 focus:border-amber-400 "
+        />
       </fieldset>
       <fieldset>
         <label
-          htmlFor=""
+          htmlFor="client-notes"
           className="text-lg font-semibold text-zinc-800 dark:text-white"
         >
           Notes
         </label>
-        <textarea className="w-full h-24 rounded focus:ring-amber-400 focus:border-amber-400"></textarea>
+        <textarea
+          name="notes"
+          id="client-notes"
+          className="w-full focus:ring-amber-400 focus:border-amber-400 "
+        ></textarea>
       </fieldset>
     </form>
   );
