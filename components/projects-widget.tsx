@@ -1,15 +1,14 @@
+import { Client, Project } from "../types/toggl";
 import React, { useEffect, useState } from "react";
 import {
   UilAngleLeft,
   UilAngleRight,
-  UilEdit,
-  UilEditAlt,
   UilPlay,
   UilPlus,
+  UilStopwatch,
 } from "@iconscout/react-unicons";
 
 import Button from "./button";
-import { Client, Project } from "../types/toggl";
 import { motion } from "framer-motion";
 import { useTogglStore } from "../store";
 
@@ -52,11 +51,11 @@ const ProjectsWidget: React.FC = () => {
 
   return (
     <section className="box-border w-full mb-4 space-y-4 overflow-hidden md:mx-4 break-inside group">
-      <div className="items-center justify-between p-4 pb-2 space-y-4 md:space-x-2 md:flex md:space-y-0">
+      <div className="items-center justify-between p-4 pb-2 space-y-4 lg:space-x-2 lg:flex lg:space-y-0">
         <h4 className="text-4xl font-bold transition-colors duration-300 group-hover:text-emerald-600">
           Projects.
         </h4>
-        <div className="flex items-center justify-between space-x-2 md:justify-end">
+        <div className="flex items-center justify-between space-x-2 lg:justify-end">
           <select
             name="client-choices"
             id="client-choices"
@@ -94,7 +93,7 @@ const ProjectsWidget: React.FC = () => {
                 </div>
                 <div className="flex items-end justify-end flex-grow-0 w-full space-x-4">
                   <button className="flex items-center justify-center p-2 border border-black rounded-lg dark:text-white dark:border-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                    <UilEditAlt />
+                    <UilStopwatch />
                   </button>
                   <button className="flex items-center justify-center p-2 border border-black rounded-lg dark:text-white dark:border-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
                     <UilPlay />
