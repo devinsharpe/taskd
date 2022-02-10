@@ -1,16 +1,18 @@
 import "../public/tailwind.css";
 
+import { PostgrestError, User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { useToastStore, useTogglStore, useUserStore } from "../store";
 
 import { Account } from "../types/models";
+import AccountDetailsForm from "../components/account-details-form";
 import AccountNav from "../components/account-nav";
 import type { AppProps } from "next/app";
+import Modal from "../components/modal";
 import ThemeToggle from "../components/theme-toggle";
 import Toaster from "../components/toaster";
-import { User } from "@supabase/supabase-js";
 import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
-import { useTogglStore, useUserStore } from "../store";
 import useToggl from "../hooks/useToggl";
 
 export enum SoundEffects {
@@ -19,12 +21,16 @@ export enum SoundEffects {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [hideDarkModeToggle, setHideDarkModeToggle] = useState(false);
-  const { user, setAccount, setUser } = useUserStore((state) => ({
+  const [isAuthPage, setIsAuthPage] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isSavingAccount, setIsSavingAccount] = useState(false);
+  const { account, user, setAccount, setUser } = useUserStore((state) => ({
+    account: state.account,
     user: state.user,
     setAccount: state.setAccount,
     setUser: state.setUser,
   }));
+  const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
   const { authenticate } = useToggl();
   const { setTogglUser } = useTogglStore((state) => ({
     setTogglUser: state.setTogglUser,
@@ -42,20 +48,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   useEffect(() => {
-    const isAuthPage = [
-      "/signin",
-      "/signup",
-      "/reset",
-      "/forget",
-      "/",
-    ].includes(router.pathname);
-    setHideDarkModeToggle(!isAuthPage);
-    if (isAuthPage) {
+    const isAuth = ["/signin", "/signup", "/reset", "/forget", "/"].includes(
+      router.pathname
+    );
+    if (isAuth) {
       window.document.querySelector("html")?.classList.add("pattern");
     } else {
       window.document.querySelector("html")?.classList.remove("pattern");
     }
-    if (!user && !isAuthPage) {
+    if (!user && !isAuth) {
       fetch("/api/auth/user")
         .then(async (res) => {
           if (res.ok) {
@@ -86,7 +87,57 @@ function MyApp({ Component, pageProps }: AppProps) {
           console.log(err);
         });
     }
+    setIsAuthPage(isAuth);
   }, [router.pathname, user, setUser, setAccount, authenticate, setTogglUser]);
+
+  const handleError = (error: PostgrestError) => {
+    pushToast({
+      title: "Something went wrong",
+      description: error.message,
+      duration: 10000,
+      isClosable: true,
+      status: "ERROR",
+    });
+  };
+
+  const handleAccountData = async (data: Account[]) => {
+    setAccount(data![0]);
+    const togglUser = await authenticate(data![0].togglToken);
+    setTogglUser(togglUser!);
+    setIsAccountModalOpen(false);
+  };
+
+  const handleAccountFormSubmit = async (formData: {
+    lastName: string;
+    firstName: string;
+    togglToken: string;
+  }) => {
+    if (user) {
+      setIsSavingAccount(true);
+
+      if (account) {
+        const { data, error } = await supabase
+          .from<Account>("accounts")
+          .update({ ...formData })
+          .match({ id: account.id });
+        if (error) handleError(error);
+        if (data) await handleAccountData(data);
+      } else {
+        const { data, error } = await supabase
+          .from<Account>("accounts")
+          .insert({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: user!.email,
+            togglToken: formData.togglToken,
+            user: user!.id,
+          });
+        if (error) handleError(error);
+        if (data) await handleAccountData(data);
+      }
+      setIsSavingAccount(true);
+    }
+  };
 
   return (
     <>
@@ -100,11 +151,27 @@ function MyApp({ Component, pageProps }: AppProps) {
         autoPlay={false}
         id="sound-click-select"
       />
-      <Component {...pageProps} />
+      {account || isAuthPage ? <Component {...pageProps} /> : <></>}
+      <Modal
+        title="Account Details"
+        isClosable={Boolean(account)}
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
+      >
+        <AccountDetailsForm
+          account={account ? account : undefined}
+          user={user!}
+          onSubmit={handleAccountFormSubmit}
+          isLoading={isSavingAccount}
+        />
+      </Modal>
       <Toaster />
-      <AccountNav />
+      <AccountNav
+        handleAccountSettingsClick={() => setIsAccountModalOpen(true)}
+      />
+
       <div className="fixed bottom-4 right-4">
-        <ThemeToggle isHidden={hideDarkModeToggle} />
+        <ThemeToggle isHidden={!isAuthPage} />
       </div>
     </>
   );
