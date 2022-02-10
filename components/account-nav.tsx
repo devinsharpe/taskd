@@ -56,7 +56,13 @@ const buttonVariants = {
   },
 };
 
-const AccountNav = () => {
+interface AccountNavProps {
+  handleAccountSettingsClick: () => void;
+}
+
+const AccountNav: React.FC<AccountNavProps> = ({
+  handleAccountSettingsClick,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSoundDisabled, setIsSoundDisabled] = useState(false);
   const [closeTimeout, setCloseTimeout] = useState<number>(0);
@@ -157,6 +163,7 @@ const AccountNav = () => {
                 <button
                   className="flex items-center w-full p-2 space-x-2 rounded hover:bg-zinc-100 dark:hover:bg-zinc-500 focus:ring-2 focus:ring-zinc-300 focus:outline-none dark:focus:ring-zinc-500"
                   ref={settingsRef}
+                  onClick={handleAccountSettingsClick}
                 >
                   <UilSetting />
                   <span>Account Settings</span>

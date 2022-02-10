@@ -8,7 +8,11 @@ import useInterval from "../hooks/useInterval";
 import useToggl from "../hooks/useToggl";
 import { useTogglStore } from "../store";
 
-const CurrentTimeEntry = () => {
+interface CurrentTimeEntryProps {
+  handleStart: () => void;
+}
+
+const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({ handleStart }) => {
   const { timeEntry } = useToggl();
   const [currentEntry, setCurrentEntry] = useState<TimeEntry | null>(null);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
@@ -56,7 +60,7 @@ const CurrentTimeEntry = () => {
   return (
     <section className="box-border w-full p-4 mb-4 space-y-4 overflow-hidden md:mx-4 break-inside group ">
       {currentEntry ? (
-        <div className="flex items-center justify-between p-4 bg-white border-2 border-white rounded-lg shadow-lg dark:bg-zinc-800 dark:hover:border-white dark:border-zinc-800 hover:border-black">
+        <div className="flex items-center justify-between p-4 bg-white border rounded-lg shadow-lg dark:bg-zinc-800 dark:hover:border-white dark:border-zinc-800 hover:border-black">
           <div>
             {currentProject ? (
               <div className="flex items-center space-x-1">
@@ -127,7 +131,7 @@ const CurrentTimeEntry = () => {
               Let&apos;s Get to Work
             </h5>
           </div>
-          <Button className="rounded-full" scaleOnHover>
+          <Button className="rounded-full" scaleOnHover onClick={handleStart}>
             <UilPlay />
           </Button>
         </div>
