@@ -12,7 +12,11 @@ import Button from "./button";
 import { motion } from "framer-motion";
 import { useTogglStore } from "../store";
 
-const ProjectsWidget: React.FC = () => {
+interface ProjectsWidgetProps {
+  handleNew: () => void;
+}
+
+const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({ handleNew }) => {
   const { clients, projects } = useTogglStore((state) => ({
     clients: state.clients,
     projects: state.projects,
@@ -70,7 +74,7 @@ const ProjectsWidget: React.FC = () => {
               </option>
             ))}
           </select>
-          <button className="secondary">
+          <button className="secondary" onClick={handleNew} type="button">
             <UilPlus />
           </button>
         </div>
@@ -81,9 +85,9 @@ const ProjectsWidget: React.FC = () => {
             {filteredProjects.slice((page - 1) * 6, page * 6).map((project) => (
               <article
                 key={project.id!}
-                className="relative flex items-center justify-between px-4 py-2 overflow-hidden bg-white border-2 border-white rounded-lg shadow dark:bg-zinc-800 dark:border-zinc-800 hover:border-black dark:hover:border-white group"
+                className="relative flex items-center px-4 py-2 overflow-hidden bg-white border rounded-lg dark:bg-zinc-800 dark:border-zinc-600 hover:border-black dark:hover:border-white group"
               >
-                <div className="flex-grow w-full">
+                <div className="w-full">
                   <h4 className="z-10 text-xl font-semibold md:text-2xl">
                     {project.name}
                   </h4>
@@ -91,11 +95,11 @@ const ProjectsWidget: React.FC = () => {
                     <h5 className="text-sm">{clientsMap[project.cid].name}</h5>
                   )}
                 </div>
-                <div className="flex items-end justify-end flex-grow-0 w-full space-x-4">
-                  <button className="flex items-center justify-center p-2 border border-black rounded-lg dark:text-white dark:border-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                <div className="flex items-end justify-end space-x-4">
+                  <button className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
                     <UilStopwatch />
                   </button>
-                  <button className="flex items-center justify-center p-2 border border-black rounded-lg dark:text-white dark:border-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                  <button className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
                     <UilPlay />
                   </button>
                 </div>

@@ -48,6 +48,7 @@ const SimplePopover: React.FC<SimplePopoverProps> = ({
       {React.cloneElement(buttonNode, {
         onFocus: () => setIsOpen(true),
         onBlur: () => setIsOpen(false),
+        type: "button",
       })}
       <AnimatePresence initial={false}>
         {isOpen && (
