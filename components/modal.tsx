@@ -1,10 +1,11 @@
 import { AnimatePresence, Variants, motion } from "framer-motion";
+import React, { ReactElement } from "react";
 
-import React from "react";
 import { UilTimes } from "@iconscout/react-unicons";
 
 interface ModalProps {
   className?: string;
+  footer?: React.ReactNode;
   title: string;
   isClosable: boolean;
   isOpen: boolean;
@@ -38,6 +39,7 @@ const variants = {
 
 const Modal: React.FC<ModalProps> = ({
   className,
+  footer,
   isClosable,
   isOpen,
   onClose,
@@ -49,7 +51,7 @@ const Modal: React.FC<ModalProps> = ({
       {isOpen && (
         <>
           <motion.aside
-            className={`fixed max-h-[calc(100vh-4rem)] my-auto overflow-y-auto inset-0 z-50 w-5/6 p-8 m-auto mx-auto space-y-4 bg-white border-2 shadow-xl dark:bg-zinc-800 h-min md:w-1/2 rounded-xl border-zinc-800 ${className}`}
+            className={`fixed max-h-[calc(100vh-4rem)] my-auto overflow-y-auto inset-0 z-50 w-5/6 m-auto border mx-auto space-y-4 bg-white shadow-xl dark:bg-zinc-800 h-min md:w-1/2 lg:w-2/5 xl:w-1/5 rounded-xl dark:border-zinc-600  ${className}`}
             variants={variants}
             initial="dialogInitial"
             animate="dialogVisible"
@@ -57,7 +59,7 @@ const Modal: React.FC<ModalProps> = ({
             role="dialog"
             transition={variants.transition}
           >
-            <div className="flex items-center justify-between w-full">
+            <header className="modal-header">
               <h2 className="text-2xl font-semibold ">{title}</h2>
               {isClosable && (
                 <button
@@ -67,8 +69,9 @@ const Modal: React.FC<ModalProps> = ({
                   <UilTimes />
                 </button>
               )}
-            </div>
-            {children}
+            </header>
+            <div>{children}</div>
+            {footer ? <>{footer}</> : <></>}
           </motion.aside>
           <motion.div
             className="fixed inset-0 z-40 bg-white/50 dark:bg-zinc-800/50"
