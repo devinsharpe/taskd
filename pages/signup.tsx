@@ -57,7 +57,7 @@ const SignUp: NextPage = () => {
 
   return (
     <main className="flex items-center justify-center w-full h-screen">
-      <article className="w-4/5 md:w-2/5 card">
+      <article className="w-4/5 md:w-2/5 card xl:w-1/5">
         <header className="flex flex-col items-center">
           <hgroup className="mb-0 text-center">
             <h2 className="text-2xl font-bold">Let&apos;s Get Started.</h2>

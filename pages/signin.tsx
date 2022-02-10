@@ -89,7 +89,7 @@ const SignIn: NextPage = () => {
   return (
     <>
       <main className="flex items-center justify-center w-full h-screen container-fluid">
-        <article className="w-4/5 card md:w-2/5">
+        <article className="w-4/5 card md:w-2/5 xl:w-1/5">
           <header className="flex flex-col items-center">
             <hgroup className="mb-0 text-center">
               <h2 className="text-2xl font-bold">

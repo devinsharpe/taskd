@@ -1,11 +1,12 @@
-import { NextPage } from "next";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { FormEventHandler, useState } from "react";
+
 import Button from "../components/button";
-import { useToastStore } from "../store";
+import Link from "next/link";
+import { NextPage } from "next";
 import { Toast } from "../store/toast";
 import { supabase } from "../utils/supabaseClient";
+import { useRouter } from "next/router";
+import { useToastStore } from "../store";
 
 const ForgotPassword: NextPage = () => {
   const [email, setEmail] = useState("");
@@ -42,7 +43,7 @@ const ForgotPassword: NextPage = () => {
 
   return (
     <main className="flex items-center justify-center w-full h-screen container-fluid">
-      <article className="w-4/5 card md:w-1/2">
+      <article className="w-4/5 card md:w-1/2 xl:w-1/5">
         <header className="flex flex-col items-center">
           <hgroup className="mb-0 text-center">
             <h2 className="text-2xl font-bold">
