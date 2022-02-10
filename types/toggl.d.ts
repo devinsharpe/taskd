@@ -12,7 +12,7 @@ export interface TogglUser {
   language: string;
   image_url: string;
   sidebar_piechart: boolean;
-  readonly at: Date;
+  readonly at?: Date;
   new_blog_post: {
     title: string;
     url: string;
@@ -35,7 +35,7 @@ export interface TimeEntry {
   created_with: string;
   tags: string[];
   duronly: boolean;
-  readonly at: Date;
+  readonly at?: Date;
 }
 
 export interface Project {
@@ -75,14 +75,14 @@ export interface Workspace {
   only_admins_may_create_projects: boolean;
   rounded: -1 | 0 | 1;
   rounding_minutes: number;
-  readonly at: Date;
+  readonly at?: Date;
 }
 
 export interface WorkspaceGroup {
   id?: number;
   wid: number;
   name: string;
-  readonly at: Date;
+  readonly at?: Date;
 }
 
 export interface WorkspaceUser {
@@ -98,7 +98,7 @@ export interface Client {
   wid: number;
   name: string;
   notes?: string;
-  readonly at: Date;
+  readonly at?: Date;
 }
 
 export interface TogglUserWithRelatedData extends TogglUser {
