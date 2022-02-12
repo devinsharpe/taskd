@@ -27,7 +27,7 @@ const ClientForm: React.FC<ClientFormProps> = ({
             htmlFor="client-name"
             className="text-lg font-semibold text-zinc-800 dark:text-white"
           >
-            Name
+            Name&nbsp;<span className="text-red-600">*</span>
           </label>
           <input
             autoFocus
