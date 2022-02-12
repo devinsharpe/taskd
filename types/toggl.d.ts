@@ -49,7 +49,7 @@ export interface Project {
   template_id?: number;
   readonly at?: Date;
   color: string;
-  readonly created_at: Date;
+  readonly created_at?: Date;
 }
 
 export interface ProjectUser {
