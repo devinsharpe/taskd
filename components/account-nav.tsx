@@ -137,9 +137,9 @@ const AccountNav: React.FC<AccountNavProps> = ({
           whileTap={{ scale: 0.98 }}
           onClick={() => {
             if (isOpen) {
-              playSoundEffect(SoundEffects.clickError);
+              playSoundEffect(SoundEffects.interfaceClose);
             } else {
-              playSoundEffect(SoundEffects.clickSelect);
+              playSoundEffect(SoundEffects.interfaceOpen);
             }
             setIsOpen(!isOpen);
           }}

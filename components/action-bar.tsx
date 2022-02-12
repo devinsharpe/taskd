@@ -110,9 +110,9 @@ const ActionBar: React.FC<ActionBarProps> = ({ handleActionRequest }) => {
         whileTap={{ scale: 0.98 }}
         onClick={() => {
           if (isOpen) {
-            playSoundEffect(SoundEffects.clickError);
+            playSoundEffect(SoundEffects.interfaceClose);
           } else {
-            playSoundEffect(SoundEffects.clickSelect);
+            playSoundEffect(SoundEffects.interfaceOpen);
           }
           setIsOpen(!isOpen);
         }}
