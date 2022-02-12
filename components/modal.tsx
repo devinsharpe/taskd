@@ -39,7 +39,6 @@ const variants = {
 
 const Modal: React.FC<ModalProps> = ({
   className,
-  footer,
   isClosable,
   isOpen,
   onClose,
@@ -47,11 +46,11 @@ const Modal: React.FC<ModalProps> = ({
   title,
 }) => {
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
+    <>
+      <AnimatePresence>
+        {isOpen && (
           <motion.aside
-            className={`fixed max-h-[calc(100vh-4rem)] my-auto overflow-y-auto inset-0 z-50 w-5/6 m-auto border mx-auto space-y-4 bg-white shadow-xl dark:bg-zinc-800 h-min md:w-1/2 lg:w-2/5 xl:w-1/5 rounded-xl dark:border-zinc-600  ${className}`}
+            className={`fixed max-h-[calc(100vh-4rem)] my-auto overflow-y-auto inset-0 z-50 w-5/6 m-auto border mx-auto space-y-4 bg-white shadow-xl dark:bg-zinc-800 h-min md:w-3/4 lg:w-3/5 max-w-2xl rounded-xl dark:border-zinc-600  ${className}`}
             variants={variants}
             initial="dialogInitial"
             animate="dialogVisible"
@@ -71,8 +70,11 @@ const Modal: React.FC<ModalProps> = ({
               )}
             </header>
             <div>{children}</div>
-            {footer ? <>{footer}</> : <></>}
           </motion.aside>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
             className="fixed inset-0 z-40 bg-white/50 dark:bg-zinc-800/50"
             variants={variants}
@@ -86,9 +88,9 @@ const Modal: React.FC<ModalProps> = ({
               }
             }}
           />
-        </>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
