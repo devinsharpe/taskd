@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import {
   UilAngleLeft,
   UilAngleRight,
+  UilCalendarAlt,
+  UilEditAlt,
   UilPlay,
   UilPlus,
-  UilStopwatch,
 } from "@iconscout/react-unicons";
 
 import Button from "./button";
@@ -13,15 +14,23 @@ import { motion } from "framer-motion";
 import { useTogglStore } from "../store";
 
 interface ProjectsWidgetProps {
-  handleNew: () => void;
+  handleEdit: (pid: number) => void;
+  handleNew: (cid: number) => void;
+  handleNewEvent: (pid: number) => void;
+  handleStart: (pid: number) => void;
 }
 
-const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({ handleNew }) => {
+const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({
+  handleEdit,
+  handleNew,
+  handleNewEvent,
+  handleStart,
+}) => {
   const { clients, projects } = useTogglStore((state) => ({
     clients: state.clients,
     projects: state.projects,
   }));
-  const [clientFilter, setClientFilter] = useState("ALL");
+  const [clientFilter, setClientFilter] = useState("-1");
   const [clientsMap, setClientsMap] = useState<{ [key: number]: Client }>({});
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [maxPage, setMaxPage] = useState(1);
@@ -41,8 +50,8 @@ const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({ handleNew }) => {
   }, [filteredProjects]);
 
   useEffect(() => {
-    if (clientFilter === "ALL") {
-      setFilteredProjects([...projects]);
+    if (clientFilter === "-1") {
+      setFilteredProjects([...projects.filter((project) => project.active)]);
     } else {
       setFilteredProjects([
         ...projects.filter(
@@ -67,14 +76,18 @@ const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({ handleNew }) => {
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
           >
-            <option value="ALL">All Clients</option>
+            <option value="-1">All Clients</option>
             {clients.map((client) => (
               <option value={client.id!} key={client.id!}>
                 {client.name}
               </option>
             ))}
           </select>
-          <button className="secondary" onClick={handleNew} type="button">
+          <button
+            className="secondary"
+            onClick={() => handleNew(parseInt(clientFilter, 10))}
+            type="button"
+          >
             <UilPlus />
           </button>
         </div>
@@ -88,23 +101,74 @@ const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({ handleNew }) => {
                 className="relative flex items-center px-4 py-2 overflow-hidden bg-white border rounded-lg dark:bg-zinc-800 dark:border-zinc-600 hover:border-black dark:hover:border-white group"
               >
                 <div className="w-full">
-                  <h4 className="z-10 text-xl font-semibold md:text-2xl">
+                  <h4 className="z-10 text-xl font-semibold md:text-2xl hover:underline">
                     {project.name}
                   </h4>
+
                   {project.cid && clientsMap[project.cid] && (
                     <h5 className="text-sm">{clientsMap[project.cid].name}</h5>
                   )}
                 </div>
                 <div className="flex items-end justify-end space-x-4">
-                  <button className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                    <UilStopwatch />
+                  <button
+                    className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                    onClick={() => handleEdit(project.id!)}
+                  >
+                    <UilEditAlt />
                   </button>
-                  <button className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                  <button
+                    className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                    onClick={() => handleNewEvent(project.id!)}
+                  >
+                    <UilCalendarAlt />
+                  </button>
+                  <button
+                    className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                    onClick={() => handleStart(project.id!)}
+                  >
                     <UilPlay />
                   </button>
                 </div>
               </article>
             ))}
+            {filteredProjects.length === 0 && (
+              <>
+                {Object.keys([...Array(6)]).map((key) => (
+                  <article
+                    key={key}
+                    className="relative flex items-center justify-center  dark:text-white overflow-hidden bg-white border rounded-lg h-[4.375rem] dark:bg-zinc-800 dark:border-zinc-600 hover:border-black dark:hover:border-white group"
+                  >
+                    <button
+                      className="flex items-center justify-center px-8 py-2 space-x-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:ring-2 focus:ring-emerald-600"
+                      onClick={() => handleNew(parseInt(clientFilter, 10))}
+                    >
+                      <UilPlus />
+                      <h4 className="text-lg font-semibold">New Project</h4>
+                    </button>
+                  </article>
+                ))}
+              </>
+            )}
+            {page == maxPage && filteredProjects.length % 6 > 0 && (
+              <>
+                {Object.keys([...Array(6 - (filteredProjects.length % 6))]).map(
+                  (key) => (
+                    <article
+                      key={key}
+                      className="relative flex items-center justify-center  dark:text-white overflow-hidden bg-white border rounded-lg h-[4.375rem] dark:bg-zinc-800 dark:border-zinc-600 hover:border-black dark:hover:border-white group"
+                    >
+                      <button
+                        className="flex items-center justify-center px-8 py-2 space-x-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:ring-2 focus:ring-emerald-600"
+                        onClick={() => handleNew(parseInt(clientFilter, 10))}
+                      >
+                        <UilPlus />
+                        <h4 className="text-lg font-semibold">New Project</h4>
+                      </button>
+                    </article>
+                  )
+                )}
+              </>
+            )}
           </>
         ) : (
           <div className="flex items-center justify-center w-full col-span-2">

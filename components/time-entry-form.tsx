@@ -1,57 +1,36 @@
 import { Client, TimeEntry } from "../types/toggl";
-import React, { useEffect, useState } from "react";
-import { UilCheck, UilTimes } from "@iconscout/react-unicons";
+import React, { FormEventHandler, useEffect, useState } from "react";
+import { UilCheck, UilTimes, UilTrashAlt } from "@iconscout/react-unicons";
 
 import Button from "./button";
 import { format } from "date-fns";
+import { formatDateTime } from "../lib/date-time-helpers";
 import { useTogglStore } from "../store";
 
 interface TimeEntryFormProps {
-  editTimeEntry?: TimeEntry;
-  isNew: boolean;
+  isLoading: boolean;
+  timeEntry: TimeEntry;
   handleClose: () => void;
+  handleDelete: (id: number) => void;
+  handleSubmit: FormEventHandler;
+  onChange: (timeEntry: TimeEntry) => void;
 }
 
 const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
-  editTimeEntry,
+  isLoading,
+  timeEntry,
   handleClose,
+  handleDelete,
+  handleSubmit,
+  onChange,
 }) => {
-  const { currentWorkspace, projects, tags } = useTogglStore((state) => ({
-    currentWorkspace: state.currentWorkspace,
+  const { projects, tags } = useTogglStore((state) => ({
     projects: state.projects,
     tags: state.tags,
   }));
-  const [timeEntry, setTimeEntry] = useState<TimeEntry>({
-    id: -1,
-    wid: currentWorkspace,
-    pid: -1,
-    description: "",
-    created_with: process.env.NEXT_PUBLIC_TOGGL_APP_NAME!,
-    tags: [] as string[],
-    duronly: false,
-    start: new Date().toLocaleString(),
-    stop: "",
-  });
-
-  useEffect(() => {
-    if (editTimeEntry) {
-      setTimeEntry({ ...timeEntry, ...editTimeEntry });
-    } else {
-      setTimeEntry({
-        id: -1,
-        wid: currentWorkspace,
-        pid: -1,
-        description: "",
-        created_with: process.env.NEXT_PUBLIC_TOGGL_APP_NAME!,
-        tags: [] as string[],
-        duronly: false,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editTimeEntry, setTimeEntry]);
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
+    <form onSubmit={handleSubmit}>
       <div className="space-y-4 modal-body">
         <fieldset className="w-full">
           <label
@@ -69,7 +48,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             placeholder="What are you working on?"
             value={timeEntry.description}
             onChange={(e) =>
-              setTimeEntry({ ...timeEntry, description: e.target.value })
+              onChange({ ...timeEntry, description: e.target.value })
             }
           />
         </fieldset>
@@ -86,10 +65,9 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                 name="project"
                 id="time-entry-project"
                 className="w-full rounded focus:ring-violet-400 focus:border-violet-400"
-                defaultValue="-1"
                 value={timeEntry.pid}
                 onChange={(e) =>
-                  setTimeEntry({
+                  onChange({
                     ...timeEntry,
                     pid: parseInt(e.target.value, 10),
                   })
@@ -117,12 +95,10 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                 className="w-full rounded focus:ring-violet-400 focus:border-violet-400"
                 required
                 value={
-                  timeEntry.start
-                    ? timeEntry.start
-                    : format(new Date(), "yyyy-MM-dd'T'HH:mm")
+                  timeEntry.start ? timeEntry.start : formatDateTime(new Date())
                 }
                 onChange={(e) =>
-                  setTimeEntry({ ...timeEntry, start: e.target.value })
+                  onChange({ ...timeEntry, start: e.target.value })
                 }
               />
             </fieldset>
@@ -140,7 +116,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                 className="w-full rounded focus:ring-violet-400 focus:border-violet-400"
                 value={timeEntry.stop}
                 onChange={(e) =>
-                  setTimeEntry({ ...timeEntry, stop: e.target.value })
+                  onChange({ ...timeEntry, stop: e.target.value })
                 }
               />
             </fieldset>
@@ -159,15 +135,15 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                   checked={timeEntry.tags.includes(tag.name)}
                   onChange={(e) =>
                     e.target.checked
-                      ? setTimeEntry({
+                      ? onChange({
                           ...timeEntry,
                           tags: [...timeEntry.tags, tag.name],
                         })
-                      : setTimeEntry({
+                      : onChange({
                           ...timeEntry,
                           tags: [
                             ...timeEntry.tags.filter(
-                              (tagItem) => tagItem === tag.name
+                              (tagItem) => tagItem !== tag.name
                             ),
                           ],
                         })
@@ -185,6 +161,17 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
         </div>
       </div>
       <footer className="modal-footer">
+        {timeEntry.id && timeEntry.id !== -1 ? (
+          <button
+            className="flex items-center secondary"
+            onClick={() => handleDelete(timeEntry.id!)}
+            type="button"
+          >
+            <UilTrashAlt />
+          </button>
+        ) : (
+          <></>
+        )}
         <button
           className="flex items-center space-x-2 secondary"
           onClick={handleClose}
@@ -193,19 +180,24 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           <UilTimes />
           <span className="hidden md:inline">Close</span>
         </button>
-        <Button scaleOnHover variant="primary" className="w-full" type="submit">
+        <Button
+          scaleOnHover
+          variant="primary"
+          className="w-full"
+          type="submit"
+          isLoading={isLoading}
+        >
           <div className="flex items-center w-full space-x-2">
             <UilCheck />
-            <span>Add Time Entry</span>
+            <span>
+              {timeEntry.id && timeEntry.id === -1 ? "Add " : "Edit "}
+              <span className="hidden md:inline-block">Time Entry</span>
+            </span>
           </div>
         </Button>
       </footer>
     </form>
   );
-};
-
-TimeEntryForm.defaultProps = {
-  isNew: true,
 };
 
 export default TimeEntryForm;
