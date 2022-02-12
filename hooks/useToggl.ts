@@ -190,23 +190,27 @@ const timeEntry = {
       {
         time_entry: {
           ...entry,
-          created_with: process.env.NEXT_PUBLIC_APP_NAME!,
+          created_with: process.env.NEXT_PUBLIC_TOGGL_APP_NAME!,
         },
       }
     );
+  },
+  delete: async (id: number) => {
+    return togglFetch<undefined, {}>(`/time_entries/${id}`, "DELETE");
   },
   get: async (id: number) => {
     return togglFetch<TimeEntry>(`/time_entries/${id}`);
   },
   list: async (startDate?: Date, endDate?: Date) => {
     const formattedStartDate = formatISO(
-      startDate ? startDate : sub(new Date(), { days: 14 })
+      startDate ? startDate : sub(new Date(), { days: 7 })
     );
     const formattedEndDate = formatISO(
-      endDate ? endDate : add(Date.parse(formattedStartDate), { days: 14 })
+      endDate ? endDate : add(Date.parse(formattedStartDate), { days: 7 })
     );
     return togglFetch<TimeEntry[]>(
-      `/time_entries?start_date=${formattedStartDate}&end_date=${formattedEndDate}`
+      `/time_entries?start_date=${formattedStartDate}&end_date=${formattedEndDate}`,
+      "LIST"
     );
   },
   update: async (entry: TimeEntry & { id: number }) => {
@@ -216,7 +220,7 @@ const timeEntry = {
       {
         time_entry: {
           ...entry,
-          created_with: process.env.NEXT_PUBLIC_APP_NAME!,
+          created_with: process.env.NEXT_PUBLIC_TOGGL_APP_NAME!,
         },
       }
     );
@@ -228,7 +232,7 @@ const timeEntry = {
       {
         time_entry: {
           ...entry,
-          created_with: process.env.NEXT_PUBLIC_APP_NAME!,
+          created_with: process.env.NEXT_PUBLIC_TOGGL_APP_NAME!,
         },
       }
     );
@@ -252,7 +256,10 @@ const workspace = {
     return togglFetch<WorkspaceGroup[]>(`/workspaces/${wid}/groups`, "LIST");
   },
   listProjects: async (wid: number) => {
-    return togglFetch<Project[]>(`/workspaces/${wid}/projects`, "LIST");
+    return togglFetch<Project[]>(
+      `/workspaces/${wid}/projects?active=both`,
+      "LIST"
+    );
   },
   listProjectUsers: async (wid: number) => {
     return togglFetch<ProjectUser[]>(
