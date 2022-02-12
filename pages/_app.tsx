@@ -16,8 +16,10 @@ import { useRouter } from "next/router";
 import useToggl from "../hooks/useToggl";
 
 export enum SoundEffects {
-  clickError = "sound-click-error",
-  clickSelect = "sound-click-select",
+  interfaceClose = "interface-close",
+  interfaceError = "interface-error",
+  interfaceOpen = "interface-open",
+  interfaceSuccess = "interface-success",
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -142,14 +144,24 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <audio
-        src="/sounds/mixkit-click-error-1110.wav"
+        src="/sounds/interface-close.wav"
         autoPlay={false}
-        id="sound-click-error"
+        id="interface-close"
       />
       <audio
-        src="/sounds/mixkit-select-click-1109.wav"
+        src="/sounds/interface-error.wav"
         autoPlay={false}
-        id="sound-click-select"
+        id="interface-error"
+      />
+      <audio
+        src="/sounds/interface-open.wav"
+        autoPlay={false}
+        id="interface-open"
+      />
+      <audio
+        src="/sounds/interface-success.wav"
+        autoPlay={false}
+        id="interface-success"
       />
       {account || isAuthPage ? <Component {...pageProps} /> : <></>}
       <Modal
