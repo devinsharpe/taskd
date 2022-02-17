@@ -127,7 +127,7 @@ const AccountNav: React.FC<AccountNavProps> = ({
 
   if (account) {
     return (
-      <nav className="fixed top-4 right-4">
+      <nav className="fixed z-10 top-4 right-4">
         <motion.button
           variants={buttonVariants}
           initial="initial"

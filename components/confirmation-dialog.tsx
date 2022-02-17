@@ -52,15 +52,15 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   const { playSoundEffect } = useSoundEffect();
 
   useEffect(() => {
-    if (isOpen && cancelButtonRef.current) {
+    if (cancelButtonRef.current) {
       cancelButtonRef.current.focus();
     }
-  }, [isOpen]);
+  }, []);
 
   return (
     <>
-      <AnimatePresence>
-        {isOpen && (
+      {isOpen && (
+        <AnimatePresence>
           <motion.aside
             className={`fixed max-h-[calc(100vh-4rem)] overflow-y-auto inset-0 z-[70] w-11/12 my-8 border mx-auto space-y-4 bg-white shadow-xl dark:bg-zinc-800 h-min md:w-3/4 lg:w-3/5 max-w-2xl rounded-xl dark:border-zinc-600`}
             variants={variants}
@@ -69,6 +69,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             exit="dialogInitial"
             role="dialog"
             transition={variants.transition}
+            key="confirmation-dialog"
           >
             <header className="flex-col modal-header">
               <h2 className="self-start text-2xl font-semibold ">{title}</h2>
@@ -107,10 +108,10 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
               </Button>
             </footer>
           </motion.aside>
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {isOpen && (
+        </AnimatePresence>
+      )}
+      {isOpen && (
+        <AnimatePresence>
           <motion.div
             className="fixed inset-0 z-[60] bg-white/50 dark:bg-zinc-800/50"
             variants={variants}
@@ -118,9 +119,10 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             animate="overlayVisible"
             exit="overlayInitial"
             transition={variants.transition}
+            key="confirmation-dialog-overlay"
           />
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      )}
     </>
   );
 };
