@@ -16,7 +16,6 @@ const useSoundEffect = () => {
           | HTMLAudioElement
           | undefined;
         if (soundEl) {
-          console.log("playing");
           await soundEl.play();
         }
       }
