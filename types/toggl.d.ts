@@ -27,7 +27,7 @@ export interface TogglUser {
 export interface TimeEntry {
   id?: number;
   wid: number;
-  pid: number;
+  pid?: number;
   start?: string;
   stop?: string;
   readonly duration?: number;
@@ -99,6 +99,12 @@ export interface Client {
   name: string;
   notes?: string;
   readonly at?: Date;
+}
+
+export interface ClientGroup {
+  id: number;
+  name: string;
+  projects: Project[];
 }
 
 export interface TogglUserWithRelatedData extends TogglUser {

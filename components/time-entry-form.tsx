@@ -1,4 +1,4 @@
-import { Client, TimeEntry } from "../types/toggl";
+import { Client, Project, TimeEntry } from "../types/toggl";
 import React, { FormEventHandler, useEffect, useState } from "react";
 import { UilCheck, UilTimes, UilTrashAlt } from "@iconscout/react-unicons";
 
@@ -24,8 +24,10 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   handleSubmit,
   onChange,
 }) => {
-  const { projects, tags } = useTogglStore((state) => ({
-    projects: state.projects,
+  const { clientGroups, tags } = useTogglStore((state) => ({
+    clientGroups: state.clientGroups.filter(
+      (clientGroup) => clientGroup.projects.length
+    ),
     tags: state.tags,
   }));
 
@@ -74,10 +76,14 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                 }
               >
                 <option value="-1">None</option>
-                {projects.map((project) => (
-                  <option value={project.id!} key={project.id!}>
-                    {project.name}
-                  </option>
+                {clientGroups.map((clientGroup) => (
+                  <optgroup key={clientGroup.id} label={clientGroup.name}>
+                    {clientGroup.projects.map((project) => (
+                      <option value={project.id!} key={project.id!}>
+                        {project.name}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
             </fieldset>

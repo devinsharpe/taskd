@@ -32,7 +32,10 @@ const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({
     seconds: number;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { projects } = useTogglStore((state) => ({ projects: state.projects }));
+  const { projects, setTimeEntries } = useTogglStore((state) => ({
+    projects: state.projects,
+    setTimeEntries: state.setTimeEntries,
+  }));
   const { playSoundEffect } = useSoundEffect();
 
   useEffect(() => {
@@ -46,6 +49,15 @@ const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({
       setCurrentEntry(entry ? entry : null);
     });
   }, [timeEntry, projects, setCurrentEntry]);
+
+  useEffect(() => {
+    if (currentEntry && currentEntry.pid) {
+      const entryProjectDetails = projects.find(
+        (project) => project.id! === currentEntry.pid
+      );
+      setCurrentProject(entryProjectDetails || null);
+    }
+  }, [currentEntry, projects]);
 
   useInterval(() => {
     if (currentEntry && currentEntry.start) {
@@ -79,6 +91,7 @@ const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({
     if (currentEntry) {
       setIsLoading(true);
       await timeEntry.stop(currentEntry.id!);
+      setTimeEntries((await timeEntry.list()) || []);
       setCurrentEntry(null);
       setCurrentProject(null);
       setIsLoading(false);
@@ -90,26 +103,25 @@ const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({
     <>
       {currentEntry ? (
         <div className="flex items-center justify-between p-4 bg-white border rounded-lg shadow-lg dark:bg-zinc-800 dark:hover:border-white dark:border-zinc-800 hover:border-black">
-          <div>
-            {currentProject ? (
-              <div className="flex items-center pb-1 space-x-1">
-                <div className="text-violet-600">
-                  <UilStopwatch />
-                </div>
-                <button
-                  className="px-2 text-violet-600 focus:outline-violet-600"
-                  onClick={() => handleEdit(currentEntry)}
-                >
-                  <h4 className="text-2xl font-bold transition-colors duration-300 hover:underline">
-                    {currentProject.name}
-                  </h4>
-                </button>
+          <div className="w-1/2 md:w-auto">
+            <div className="flex items-center pb-1 space-x-1">
+              <div className="text-violet-600">
+                <UilStopwatch />
               </div>
-            ) : (
-              <h4 className="pb-1 text-2xl font-bold transition-colors duration-300">
-                No Project
-              </h4>
-            )}
+              <button
+                className="px-2 text-violet-600 focus:outline-violet-600"
+                onClick={() => handleEdit(currentEntry)}
+              >
+                <h4 className="text-2xl font-bold truncate transition-colors duration-300 hover:underline whitespace-nowrap">
+                  {currentProject ? (
+                    <>{currentProject.name}</>
+                  ) : (
+                    <>No Project</>
+                  )}
+                </h4>
+              </button>
+            </div>
+            <h4 className="pb-1 text-2xl font-bold transition-colors duration-300"></h4>
             {currentEntry.description && (
               <p className="pb-1 text-lg font-semibold opacity-75">
                 {currentEntry.description}
@@ -127,7 +139,7 @@ const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center w-1/2 space-x-4 md:w-auto">
             {duration !== null && (
               <p className="text-xl font-semibold">{formatSeconds(duration)}</p>
             )}
