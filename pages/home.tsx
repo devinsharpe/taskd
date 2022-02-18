@@ -507,7 +507,7 @@ const Home: NextPage = () => {
         <main className="box-border h-full px-2 pb-16 mx-auto md:masonry-2-col before:box-inherit after:box-inherit md:px-0">
           <section className="box-border w-full p-4 mb-4 space-y-8 overflow-hidden md:mx-4 break-inside group ">
             <div className="flex items-center justify-between space-x-2">
-              <h4 className="text-4xl font-bold transition-colors duration-300 group-hover:text-violet-600">
+              <h4 className="text-4xl font-bold transition-colors duration-500 text-zinc-800 dark:text-zinc-200 group-hover:text-transparent bg-clip-text bg-gradient-to-br from-violet-400 to-indigo-600">
                 Time Entries.
               </h4>
               <button
