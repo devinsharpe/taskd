@@ -20,10 +20,8 @@ const Toast: React.FC<ToastProps> = ({ message, onDelete }) => {
 
   useEffect(() => {
     if (message.duration && typeof window !== "undefined" && !deleteTimeout) {
-      console.log("setting timeout");
       setDeleteTimeout(
         window.setTimeout(() => {
-          console.log("deleting");
           onDelete();
         }, message.duration)
       );
@@ -40,7 +38,7 @@ const Toast: React.FC<ToastProps> = ({ message, onDelete }) => {
 
   return (
     <motion.article
-      className="my-1 overflow-hidden bg-white rounded-lg shadow-md dark:bg-zinc-800 w-64 md:w-96 group"
+      className="w-64 my-1 overflow-hidden bg-white rounded-lg shadow-md dark:bg-zinc-800 md:w-96 group"
       variants={variants}
       initial="hidden"
       animate="visible"

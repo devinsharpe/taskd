@@ -73,7 +73,10 @@ const TogglStore = (set: SetState<TogglState>, get: GetState<TogglState>) => ({
     set((state) => ({ ...state, currentWorkspace: wid }));
   },
   setClients: (clientsArr: Client[]) => {
-    set((state) => ({ ...state, clients: clientsArr }));
+    set((state) => ({
+      ...state,
+      clients: clientsArr.sort((a, b) => (a.name > b.name ? 1 : -1)),
+    }));
     get().buildClientGroups();
   },
   setProjects: (projectsArr: Project[]) => {
@@ -81,7 +84,10 @@ const TogglStore = (set: SetState<TogglState>, get: GetState<TogglState>) => ({
     get().buildClientGroups();
   },
   setTags: (tagsArr: Tag[]) => {
-    set((state) => ({ ...state, tags: tagsArr }));
+    set((state) => ({
+      ...state,
+      tags: tagsArr.sort((a, b) => (a.name > b.name ? 1 : -1)),
+    }));
   },
   setTimeEntries: (entries: TimeEntry[]) => {
     set((state) => ({ ...state, timeEntries: entries }));
@@ -90,7 +96,12 @@ const TogglStore = (set: SetState<TogglState>, get: GetState<TogglState>) => ({
     set((state) => ({ ...state, workspaces: workspacesArr }));
   },
   pushClient: (client: Client) => {
-    set((state) => ({ ...state, clients: [...state.clients, client] }));
+    set((state) => ({
+      ...state,
+      clients: [...state.clients, client].sort((a, b) =>
+        a.name > b.name ? 1 : -1
+      ),
+    }));
     get().buildClientGroups();
   },
   pushProject: (project: Project) => {
