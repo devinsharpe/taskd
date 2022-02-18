@@ -53,11 +53,16 @@ const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({
     if (clientFilter === "-1") {
       setFilteredProjects([...projects.filter((project) => project.active)]);
     } else {
-      setFilteredProjects([
-        ...projects.filter(
-          (project) => project.cid!.toString() === clientFilter
-        ),
-      ]);
+      setFilteredProjects(
+        [
+          ...projects.filter(
+            (project) =>
+              project.active &&
+              project.cid &&
+              project.cid.toString() === clientFilter
+          ),
+        ].sort((a, b) => (a.name > b.name ? 1 : -1))
+      );
     }
     setPage(1);
   }, [clientFilter, setFilteredProjects, projects]);

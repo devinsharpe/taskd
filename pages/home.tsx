@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useToastStore, useTogglStore, useUserStore } from "../store";
 
 import ActionBar from "../components/action-bar";
-import { AnimatePresence } from "framer-motion";
 import ClientForm from "../components/client-form";
 import ConfirmationDialog from "../components/confirmation-dialog";
 import CurrentTimeEntry from "../components/current-time-entry";
@@ -20,9 +19,10 @@ import TaskForm from "../components/task-form";
 import TasksWidget from "../components/tasks-widget";
 import TimeEntriesWidget from "../components/time-entries-widget";
 import TimeEntryForm from "../components/time-entry-form";
-import { UilPlus } from "@iconscout/react-unicons";
+import { UilPlus, UilTimes } from "@iconscout/react-unicons";
 import useSoundEffect from "../hooks/useSoundEffect";
 import useToggl from "../hooks/useToggl";
+import ClientList from "../components/client-list";
 
 const Home: NextPage = () => {
   const {
@@ -90,6 +90,7 @@ const Home: NextPage = () => {
   });
   const [modalStatus, setModalStatus] = useState({
     client: false,
+    clientList: false,
     event: false,
     project: false,
     task: false,
@@ -143,10 +144,11 @@ const Home: NextPage = () => {
             .map((client) =>
               client.id === updatedClient.id ? updatedClient : client
             )
-            .sort((a, b) => (a.name > b.name ? -1 : 1))
+            .sort((a, b) => (a.name > b.name ? 1 : -1))
         );
-        setModalStatus({ ...modalStatus, client: false });
         playSoundEffect(SoundEffects.interfaceSuccess);
+        setLoadingStatus({ ...loadingStatus, client: false });
+        setModalStatus({ ...modalStatus, client: false });
       } else {
         pushToast({
           title: "Something went wrong.",
@@ -156,6 +158,7 @@ const Home: NextPage = () => {
           isClosable: true,
         });
         playSoundEffect(SoundEffects.interfaceError);
+        setLoadingStatus({ ...loadingStatus, client: false });
       }
     } else {
       const clientCopy = { ...clientDraft };
@@ -163,10 +166,11 @@ const Home: NextPage = () => {
       const newClient = await client.create(clientCopy);
       if (newClient) {
         setClients(
-          [...clients, newClient].sort((a, b) => (a.name > b.name ? -1 : 1))
+          [...clients, newClient].sort((a, b) => (a.name > b.name ? 1 : -1))
         );
-        setModalStatus({ ...modalStatus, client: false });
         playSoundEffect(SoundEffects.interfaceSuccess);
+        setLoadingStatus({ ...loadingStatus, client: false });
+        setModalStatus({ ...modalStatus, client: false });
       } else {
         pushToast({
           title: "Something went wrong.",
@@ -175,10 +179,10 @@ const Home: NextPage = () => {
           duration: 1000,
           isClosable: true,
         });
+        setLoadingStatus({ ...loadingStatus, client: false });
         playSoundEffect(SoundEffects.interfaceError);
       }
     }
-    setLoadingStatus({ ...loadingStatus, client: false });
   };
 
   const saveProject: React.FormEventHandler = async (e) => {
@@ -200,8 +204,9 @@ const Home: NextPage = () => {
             )
             .sort((a, b) => (b.name > a.name ? -1 : 1))
         );
-        setModalStatus({ ...modalStatus, project: false });
+        setLoadingStatus({ ...loadingStatus, project: false });
         playSoundEffect(SoundEffects.interfaceSuccess);
+        setModalStatus({ ...modalStatus, project: false });
       } else {
         pushToast({
           title: "Something went wrong.",
@@ -211,6 +216,7 @@ const Home: NextPage = () => {
           isClosable: true,
         });
         playSoundEffect(SoundEffects.interfaceError);
+        setLoadingStatus({ ...loadingStatus, project: false });
       }
     } else {
       const projectCopy = { ...projectDraft };
@@ -220,8 +226,9 @@ const Home: NextPage = () => {
         setProjects(
           [...projects, newProject].sort((a, b) => (a.name > b.name ? -1 : 1))
         );
-        setModalStatus({ ...modalStatus, project: false });
         playSoundEffect(SoundEffects.interfaceSuccess);
+        setLoadingStatus({ ...loadingStatus, project: false });
+        setModalStatus({ ...modalStatus, project: false });
       } else {
         pushToast({
           title: "Something went wrong.",
@@ -231,9 +238,9 @@ const Home: NextPage = () => {
           isClosable: true,
         });
         playSoundEffect(SoundEffects.interfaceError);
+        setLoadingStatus({ ...loadingStatus, project: false });
       }
     }
-    setLoadingStatus({ ...loadingStatus, project: false });
   };
 
   const saveTimeEntry: React.FormEventHandler = async (e) => {
@@ -370,7 +377,7 @@ const Home: NextPage = () => {
     switch (deleteCandidate.model) {
       case "client":
         await deleteClient(deleteCandidate.id);
-        setModalStatus({ ...modalStatus, client: false });
+        setModalStatus({ ...modalStatus, client: false, clientList: false });
         break;
       case "event":
         // TODO: Event Delete Logic
@@ -431,9 +438,46 @@ const Home: NextPage = () => {
           client={clientDraft}
           onChange={setClientDraft}
           handleClose={() => setModalStatus({ ...modalStatus, client: false })}
+          handleDelete={(cid) => {
+            setDeleteCandidate({ id: cid, model: "client" });
+            setShowConfirmationDialog(true);
+          }}
+          handleList={() =>
+            setModalStatus({ ...modalStatus, client: false, clientList: true })
+          }
           handleSubmit={saveClient}
           isLoading={loadingStatus.client}
         />
+      </Modal>
+      <Modal
+        isOpen={modalStatus.clientList}
+        onClose={() => setModalStatus({ ...modalStatus, clientList: false })}
+        title="Clients"
+        isClosable={true}
+      >
+        <ClientList
+          handleDelete={(cid) => {
+            setDeleteCandidate({ id: cid, model: "client" });
+            setShowConfirmationDialog(true);
+          }}
+          handleEdit={(cid) => {
+            const clientObj = clients.filter((client) => client.id! === cid)[0];
+            setClientDraft({ ...clientObj });
+            setModalStatus({ ...modalStatus, client: true, clientList: false });
+          }}
+        />
+        <footer className="modal-footer">
+          <button
+            className="flex items-center justify-center w-full space-x-2 secondary"
+            onClick={() =>
+              setModalStatus({ ...modalStatus, clientList: false })
+            }
+            type="button"
+          >
+            <UilTimes />
+            <span className="hidden md:inline">Close</span>
+          </button>
+        </footer>
       </Modal>
       <Modal
         isOpen={modalStatus.event}
@@ -560,7 +604,6 @@ const Home: NextPage = () => {
               setModalStatus({ ...modalStatus, project: true });
             }}
             handleNewEvent={(pid) => {
-              console.log(pid);
               setModalStatus({ ...modalStatus, event: true });
             }}
             handleEdit={(pid) => {

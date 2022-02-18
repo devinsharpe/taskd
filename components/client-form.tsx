@@ -1,5 +1,10 @@
 import React, { FormEventHandler } from "react";
-import { UilCheck, UilTimes } from "@iconscout/react-unicons";
+import {
+  UilCheck,
+  UilListUl,
+  UilTimes,
+  UilTrashAlt,
+} from "@iconscout/react-unicons";
 
 import Button from "./button";
 import { Client } from "../types/toggl";
@@ -8,6 +13,8 @@ interface ClientFormProps {
   client: Client;
   isLoading: boolean;
   handleClose: () => void;
+  handleDelete: (cid: number) => void;
+  handleList: () => void;
   handleSubmit: FormEventHandler;
   onChange: (client: Client) => void;
 }
@@ -16,6 +23,8 @@ const ClientForm: React.FC<ClientFormProps> = ({
   client,
   isLoading,
   handleClose,
+  handleDelete,
+  handleList,
   handleSubmit,
   onChange,
 }) => {
@@ -58,6 +67,17 @@ const ClientForm: React.FC<ClientFormProps> = ({
         </fieldset>
       </div>
       <footer className="modal-footer">
+        {client.id && client.id !== -1 ? (
+          <button
+            className="flex items-center secondary"
+            onClick={() => handleDelete(client.id!)}
+            type="button"
+          >
+            <UilTrashAlt />
+          </button>
+        ) : (
+          <></>
+        )}
         <button
           className="flex items-center space-x-2 secondary"
           onClick={handleClose}
@@ -78,6 +98,15 @@ const ClientForm: React.FC<ClientFormProps> = ({
             <span>Add Client</span>
           </div>
         </Button>
+        {client.id === -1 && (
+          <button
+            className="flex items-center space-x-2 secondary"
+            onClick={handleList}
+            type="button"
+          >
+            <UilListUl />
+          </button>
+        )}
       </footer>
     </form>
   );
