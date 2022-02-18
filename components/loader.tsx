@@ -2,15 +2,33 @@ import { Variant, Variants, motion } from "framer-motion";
 
 import React from "react";
 
-const animationVariants = {
-  default: {
-    opacity: [1, 0.5],
-    scale: [1.1, 0.95],
+const container = {
+  initial: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
     transition: {
-      duration: 0.75,
-      ease: "easeOut",
-      repeat: true,
-    } as Variant,
+      duration: 1,
+      ease: "easeIn",
+      staggerChildren: 0.5,
+    },
+  },
+} as Variants;
+
+const children = {
+  initial: {
+    opacity: 0,
+    scale: 1,
+  },
+  visible: {
+    opacity: [1, 0.75, 0.5],
+    scale: [1, 1.1, 1.05, 0.95, 0.9],
+  },
+  transition: {
+    duration: 1.5,
+    ease: "easeInOut",
+    repeat: Infinity,
   },
 } as Variants;
 
@@ -23,6 +41,10 @@ export interface LoaderProps {
 const Loader: React.FC<LoaderProps> = ({ className, dotClassName, size }) => {
   return (
     <motion.div
+      variants={container}
+      initial="initial"
+      animate="visible"
+      exit="initial"
       className={`${size === "sm" ? "space-x-1" : ""} ${
         size === "md" ? "space-x-2" : ""
       } ${size === "lg" ? "space-x-3" : ""} ${
@@ -30,8 +52,8 @@ const Loader: React.FC<LoaderProps> = ({ className, dotClassName, size }) => {
       }  flex items-center py-2 ${className || ""}`}
     >
       <motion.div
-        variants={animationVariants}
-        animate="default"
+        variants={children}
+        transition={children.transition}
         className={`${size === "sm" ? "w-2 h-2" : ""} ${
           size === "md" ? "w-4 h-4" : ""
         } ${size === "lg" ? "w-6 h-6" : ""} ${
@@ -39,8 +61,8 @@ const Loader: React.FC<LoaderProps> = ({ className, dotClassName, size }) => {
         }  rounded-full bg-current ${dotClassName}`}
       />
       <motion.div
-        variants={animationVariants}
-        animate="default"
+        variants={children}
+        transition={children.transition}
         className={`${size === "sm" ? "w-2 h-2" : ""} ${
           size === "md" ? "w-4 h-4" : ""
         } ${size === "lg" ? "w-6 h-6" : ""} ${
@@ -48,8 +70,8 @@ const Loader: React.FC<LoaderProps> = ({ className, dotClassName, size }) => {
         }  rounded-full bg-current ${dotClassName}`}
       />
       <motion.div
-        variants={animationVariants}
-        animate="default"
+        variants={children}
+        transition={children.transition}
         className={`${size === "sm" ? "w-2 h-2" : ""} ${
           size === "md" ? "w-4 h-4" : ""
         } ${size === "lg" ? "w-6 h-6" : ""} ${

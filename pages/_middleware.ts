@@ -23,7 +23,10 @@ const AUTH_PAGES = ["/signin", "/signup", "/forgot", "/reset"];
 
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   const authResult = await getUser(req);
-  if (req.nextUrl.pathname.includes("/api/")) {
+  if (
+    req.nextUrl.pathname.includes("/api/") ||
+    req.nextUrl.pathname.includes("/sounds/")
+  ) {
     return NextResponse.next();
   } else if (AUTH_PAGES.includes(req.nextUrl.pathname)) {
     if (authResult.user) {

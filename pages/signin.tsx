@@ -1,19 +1,28 @@
 import { FormEventHandler, useEffect, useState } from "react";
-import { useToastStore, useUserStore } from "../store";
+import { useToastStore, useTogglStore, useUserStore } from "../store";
 
+import { Account } from "../types/models";
 import Button from "../components/button";
 import Link from "next/link";
 import { NextPage } from "next";
 import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
+import useToggl from "../hooks/useToggl";
 
 const SignIn: NextPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { authenticate } = useToggl();
   const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
-  const { setUser } = useUserStore((state) => ({ setUser: state.setUser }));
+  const { setTogglUser } = useTogglStore((state) => ({
+    setTogglUser: state.setTogglUser,
+  }));
+  const { setAccount, setUser } = useUserStore((state) => ({
+    setAccount: state.setAccount,
+    setUser: state.setUser,
+  }));
 
   useEffect(() => {
     if (router.query.email) {
@@ -41,6 +50,22 @@ const SignIn: NextPage = () => {
         setIsLoading(false);
       } else {
         setUser(user!);
+        const { data, error } = await supabase
+          .from<Account>("accounts")
+          .select("firstName, lastName, email, created_at, togglToken")
+          .eq("user", user!.id);
+        if (data) {
+          setAccount(data[0]);
+          const togglUser = await authenticate(data[0].togglToken, true);
+          if (togglUser) {
+            setTogglUser(togglUser);
+          }
+        } else if (error) {
+          console.log(error);
+          setAccount(null);
+        } else {
+          setAccount(null);
+        }
         await fetch("/api/auth/set", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -64,7 +89,7 @@ const SignIn: NextPage = () => {
   return (
     <>
       <main className="flex items-center justify-center w-full h-screen container-fluid">
-        <article className="w-4/5 card md:w-2/5">
+        <article className="w-4/5 max-w-2xl card md:w-2/5">
           <header className="flex flex-col items-center">
             <hgroup className="mb-0 text-center">
               <h2 className="text-2xl font-bold">
