@@ -1,6 +1,7 @@
 import { UilCheck, UilTimes } from "@iconscout/react-unicons";
 
 import Button from "./button";
+import GroupedProjectOptions from "./grouped-project-options";
 import React from "react";
 import { useTogglStore } from "../store";
 
@@ -47,12 +48,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
                 id="task-project"
                 className="w-full focus:ring-blue-400 focus:border-blue-400"
               >
-                <option value="-1">None</option>
-                {projects.map((project) => (
-                  <option value={project.id!} key={project.id!}>
-                    {project.name}
-                  </option>
-                ))}
+                <GroupedProjectOptions />
               </select>
             </fieldset>
             <fieldset className="w-full">

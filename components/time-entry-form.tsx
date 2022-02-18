@@ -1,8 +1,9 @@
-import { Client, TimeEntry } from "../types/toggl";
+import { Client, Project, TimeEntry } from "../types/toggl";
 import React, { FormEventHandler, useEffect, useState } from "react";
 import { UilCheck, UilTimes, UilTrashAlt } from "@iconscout/react-unicons";
 
 import Button from "./button";
+import GroupedProjectOptions from "./grouped-project-options";
 import { format } from "date-fns";
 import { formatDateTime } from "../lib/date-time-helpers";
 import { useTogglStore } from "../store";
@@ -24,8 +25,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   handleSubmit,
   onChange,
 }) => {
-  const { projects, tags } = useTogglStore((state) => ({
-    projects: state.projects,
+  const { tags } = useTogglStore((state) => ({
     tags: state.tags,
   }));
 
@@ -73,12 +73,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                   })
                 }
               >
-                <option value="-1">None</option>
-                {projects.map((project) => (
-                  <option value={project.id!} key={project.id!}>
-                    {project.name}
-                  </option>
-                ))}
+                <GroupedProjectOptions />
               </select>
             </fieldset>
             <fieldset>

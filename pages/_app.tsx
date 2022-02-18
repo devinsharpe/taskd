@@ -33,8 +33,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     setUser: state.setUser,
   }));
   const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
-  const { authenticate } = useToggl();
-  const { setTogglUser } = useTogglStore((state) => ({
+  const { authenticate, timeEntry } = useToggl();
+  const { setTimeEntries, setTogglUser } = useTogglStore((state) => ({
+    setTimeEntries: state.setTimeEntries,
     setTogglUser: state.setTogglUser,
   }));
 
@@ -77,6 +78,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 );
                 if (togglUser) {
                   setTogglUser(togglUser);
+                  setTimeEntries((await timeEntry.list()) || []);
                 }
               }
             }
@@ -90,7 +92,16 @@ function MyApp({ Component, pageProps }: AppProps) {
         });
     }
     setIsAuthPage(isAuth);
-  }, [router.pathname, user, setUser, setAccount, authenticate, setTogglUser]);
+  }, [
+    router.pathname,
+    user,
+    setUser,
+    setAccount,
+    authenticate,
+    setTogglUser,
+    setTimeEntries,
+    timeEntry,
+  ]);
 
   const handleError = (error: PostgrestError) => {
     pushToast({

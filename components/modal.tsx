@@ -57,6 +57,7 @@ const Modal: React.FC<ModalProps> = ({
             exit="dialogInitial"
             role="dialog"
             transition={variants.transition}
+            key="modal-body"
           >
             <header className="modal-header">
               <h2 className="text-2xl font-semibold ">{title}</h2>
@@ -82,6 +83,7 @@ const Modal: React.FC<ModalProps> = ({
             animate="overlayVisible"
             exit="overlayInitial"
             transition={variants.transition}
+            key="modal-overlay"
             onClick={() => {
               if (isClosable) {
                 onClose();

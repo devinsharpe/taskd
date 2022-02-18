@@ -14,9 +14,10 @@ const SignIn: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { authenticate } = useToggl();
+  const { authenticate, timeEntry } = useToggl();
   const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
-  const { setTogglUser } = useTogglStore((state) => ({
+  const { setTimeEntries, setTogglUser } = useTogglStore((state) => ({
+    setTimeEntries: state.setTimeEntries,
     setTogglUser: state.setTogglUser,
   }));
   const { setAccount, setUser } = useUserStore((state) => ({
@@ -59,6 +60,7 @@ const SignIn: NextPage = () => {
           const togglUser = await authenticate(data[0].togglToken, true);
           if (togglUser) {
             setTogglUser(togglUser);
+            setTimeEntries((await timeEntry.list()) || []);
           }
         } else if (error) {
           console.log(error);
