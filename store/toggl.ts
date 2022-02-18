@@ -84,7 +84,10 @@ const TogglStore = (set: SetState<TogglState>, get: GetState<TogglState>) => ({
     get().buildClientGroups();
   },
   setTags: (tagsArr: Tag[]) => {
-    set((state) => ({ ...state, tags: tagsArr }));
+    set((state) => ({
+      ...state,
+      tags: tagsArr.sort((a, b) => (a.name > b.name ? 1 : -1)),
+    }));
   },
   setTimeEntries: (entries: TimeEntry[]) => {
     set((state) => ({ ...state, timeEntries: entries }));

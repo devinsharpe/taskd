@@ -7,6 +7,7 @@ import {
   UilEditAlt,
   UilPlay,
   UilPlus,
+  UilTagAlt,
 } from "@iconscout/react-unicons";
 
 import Button from "./button";
@@ -18,6 +19,7 @@ interface ProjectsWidgetProps {
   handleNew: (cid: number) => void;
   handleNewEvent: (pid: number) => void;
   handleStart: (pid: number) => void;
+  handleTagEdit: () => void;
 }
 
 const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({
@@ -25,6 +27,7 @@ const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({
   handleNew,
   handleNewEvent,
   handleStart,
+  handleTagEdit,
 }) => {
   const { clients, projects } = useTogglStore((state) => ({
     clients: state.clients,
@@ -88,6 +91,9 @@ const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({
               </option>
             ))}
           </select>
+          <button className="secondary" type="button" onClick={handleTagEdit}>
+            <UilTagAlt />
+          </button>
           <button
             className="secondary"
             onClick={() => handleNew(parseInt(clientFilter, 10))}

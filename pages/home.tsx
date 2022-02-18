@@ -1,7 +1,7 @@
-import { Client, Project, TimeEntry } from "../types/toggl";
+import { Client, Project, Tag, TimeEntry } from "../types/toggl";
 import { differenceInSeconds, format, getUnixTime } from "date-fns";
 import { formatDateTime, parseDateTime } from "../lib/date-time-helpers";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useToastStore, useTogglStore, useUserStore } from "../store";
 
 import ActionBar from "../components/action-bar";
@@ -23,6 +23,8 @@ import { UilPlus, UilTimes } from "@iconscout/react-unicons";
 import useSoundEffect from "../hooks/useSoundEffect";
 import useToggl from "../hooks/useToggl";
 import ClientList from "../components/client-list";
+import TagForm from "../components/tag-form";
+import TagList from "../components/tag-list";
 
 const Home: NextPage = () => {
   const {
@@ -31,6 +33,7 @@ const Home: NextPage = () => {
     projects,
     setClients,
     setProjects,
+    setTags,
     setTimeEntries,
   } = useTogglStore((state) => ({
     clients: state.clients,
@@ -38,6 +41,7 @@ const Home: NextPage = () => {
     projects: state.projects,
     setClients: state.setClients,
     setProjects: state.setProjects,
+    setTags: state.setTags,
     setTimeEntries: state.setTimeEntries,
   }));
   const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
@@ -49,7 +53,14 @@ const Home: NextPage = () => {
   const [currentEntry, setCurrentEntry] = useState<TimeEntry | null>(null);
   const [deleteCandidate, setDeleteCandidate] = useState<{
     id: number;
-    model: "client" | "event" | "project" | "task" | "time_entry" | null;
+    model:
+      | "client"
+      | "event"
+      | "project"
+      | "tag"
+      | "task"
+      | "time_entry"
+      | null;
   }>({ id: -1, model: null });
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
@@ -68,6 +79,11 @@ const Home: NextPage = () => {
     is_private: true,
     color: "1",
   });
+  const [tagDraft, setTagDraft] = useState<Tag>({
+    id: -1,
+    name: "",
+    wid: currentWorkspace,
+  });
   const [timeEntryDraft, setTimeEntryDraft] = useState<TimeEntry>({
     id: -1,
     pid: -1,
@@ -85,6 +101,7 @@ const Home: NextPage = () => {
     delete: false,
     event: false,
     project: false,
+    tag: false,
     task: false,
     time_entry: false,
   });
@@ -94,11 +111,12 @@ const Home: NextPage = () => {
     event: false,
     project: false,
     task: false,
+    tag: false,
     time_entry: false,
   });
 
   const { playSoundEffect } = useSoundEffect();
-  const { client, project, timeEntry, workspace } = useToggl();
+  const { client, project, tag, timeEntry, workspace } = useToggl();
 
   useEffect(() => {
     if (!modalStatus.client) {
@@ -243,6 +261,43 @@ const Home: NextPage = () => {
     }
   };
 
+  const saveTag: React.FormEventHandler = async (e) => {
+    e.preventDefault();
+    setLoadingStatus({ ...loadingStatus, tag: true });
+    try {
+      const newTag = await tag.create({
+        name: tagDraft.name,
+        wid: currentWorkspace,
+      });
+      if (newTag) {
+        setTags((await workspace.listTags(currentWorkspace)) || []);
+        playSoundEffect(SoundEffects.interfaceSuccess);
+        setTagDraft({ ...tagDraft, name: "" });
+        setLoadingStatus({ ...loadingStatus, tag: false });
+      } else {
+        pushToast({
+          title: "Something went wrong.",
+          description: "Your tag could not be saved.",
+          status: "ERROR",
+          duration: 10000,
+          isClosable: true,
+        });
+        playSoundEffect(SoundEffects.interfaceError);
+        setLoadingStatus({ ...loadingStatus, tag: false });
+      }
+    } catch (err) {
+      pushToast({
+        title: "Something went wrong.",
+        description: "Your tag could not be saved.",
+        status: "ERROR",
+        duration: 10000,
+        isClosable: true,
+      });
+      playSoundEffect(SoundEffects.interfaceError);
+      setLoadingStatus({ ...loadingStatus, tag: false });
+    }
+  };
+
   const saveTimeEntry: React.FormEventHandler = async (e) => {
     e.preventDefault();
     setLoadingStatus({ ...loadingStatus, time_entry: true });
@@ -365,6 +420,11 @@ const Home: NextPage = () => {
     }
   };
 
+  const deleteTag = async (id: number) => {
+    await tag.delete(id);
+    setTags((await workspace.listTags(currentWorkspace)) || []);
+  };
+
   const deleteTimeEntry = async (id: number) => {
     await timeEntry.delete(id);
     if (currentEntry && id === currentEntry.id) {
@@ -385,6 +445,9 @@ const Home: NextPage = () => {
       case "project":
         await deleteProject(deleteCandidate.id);
         setModalStatus({ ...modalStatus, project: false });
+        break;
+      case "tag":
+        await deleteTag(deleteCandidate.id);
         break;
       case "task":
         // TODO: "Task Delete Logic"
@@ -417,8 +480,8 @@ const Home: NextPage = () => {
           if (choice) {
             handleDelete();
           } else {
-            setShowConfirmationDialog(false);
             setDeleteCandidate({ id: -1, model: null });
+            setShowConfirmationDialog(false);
           }
         }}
       />
@@ -516,6 +579,37 @@ const Home: NextPage = () => {
         <TaskForm
           handleClose={() => setModalStatus({ ...modalStatus, task: false })}
         />
+      </Modal>
+      <Modal
+        isOpen={modalStatus.tag}
+        onClose={() => setModalStatus({ ...modalStatus, tag: false })}
+        title="Tags"
+        isClosable={true}
+      >
+        <section className="modal-body">
+          <TagForm
+            handleSubmit={saveTag}
+            isLoading={loadingStatus.tag}
+            onChange={setTagDraft}
+            tag={tagDraft}
+          />
+          <TagList
+            handleDelete={(id) => {
+              setDeleteCandidate({ id, model: "tag" });
+              setShowConfirmationDialog(true);
+            }}
+          />
+        </section>
+        <footer className="modal-footer">
+          <button
+            className="flex items-center justify-center w-full space-x-2 secondary"
+            onClick={() => setModalStatus({ ...modalStatus, tag: false })}
+            type="button"
+          >
+            <UilTimes />
+            <span className="hidden md:inline">Close</span>
+          </button>
+        </footer>
       </Modal>
       <Modal
         isOpen={modalStatus.time_entry}
@@ -616,6 +710,9 @@ const Home: NextPage = () => {
             handleStart={(pid) => {
               setTimeEntryDraft({ ...timeEntryDraft, pid });
               setModalStatus({ ...modalStatus, time_entry: true });
+            }}
+            handleTagEdit={() => {
+              setModalStatus({ ...modalStatus, tag: true });
             }}
           />
         </main>

@@ -169,7 +169,7 @@ const projectUser = {
 
 const tag = {
   create: async (tag: Tag) => {
-    return togglFetch<Tag, { tag: Tag }>(`/tags/`);
+    return togglFetch<Tag, { tag: Tag }>(`/tags`, "POST", { tag });
   },
   delete: async (id: number) => {
     return togglFetch<{}>(`/tags/${id}`, "DELETE");
