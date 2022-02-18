@@ -1,6 +1,7 @@
 import { UilCheck, UilTimes } from "@iconscout/react-unicons";
 
 import Button from "./button";
+import GroupedProjectOptions from "./grouped-project-options";
 import React from "react";
 import { useTogglStore } from "../store";
 
@@ -57,12 +58,7 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
             id="event-project"
             className="w-full rounded focus:border-teal-400 focus:ring-teal-400"
           >
-            <option value="none">None</option>
-            {projects.map((project) => (
-              <option value={project.id!} key={project.id!}>
-                {project.name}
-              </option>
-            ))}
+            <GroupedProjectOptions />
           </select>
         </fieldset>
 

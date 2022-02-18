@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useToastStore, useTogglStore, useUserStore } from "../store";
 
 import ActionBar from "../components/action-bar";
+import { AnimatePresence } from "framer-motion";
 import ClientForm from "../components/client-form";
 import ConfirmationDialog from "../components/confirmation-dialog";
 import CurrentTimeEntry from "../components/current-time-entry";
@@ -19,18 +20,26 @@ import TaskForm from "../components/task-form";
 import TasksWidget from "../components/tasks-widget";
 import TimeEntriesWidget from "../components/time-entries-widget";
 import TimeEntryForm from "../components/time-entry-form";
+import { UilPlus } from "@iconscout/react-unicons";
 import useSoundEffect from "../hooks/useSoundEffect";
 import useToggl from "../hooks/useToggl";
 
 const Home: NextPage = () => {
-  const { clients, currentWorkspace, projects, setClients, setProjects } =
-    useTogglStore((state) => ({
-      clients: state.clients,
-      currentWorkspace: state.currentWorkspace,
-      projects: state.projects,
-      setClients: state.setClients,
-      setProjects: state.setProjects,
-    }));
+  const {
+    clients,
+    currentWorkspace,
+    projects,
+    setClients,
+    setProjects,
+    setTimeEntries,
+  } = useTogglStore((state) => ({
+    clients: state.clients,
+    currentWorkspace: state.currentWorkspace,
+    projects: state.projects,
+    setClients: state.setClients,
+    setProjects: state.setProjects,
+    setTimeEntries: state.setTimeEntries,
+  }));
   const { pushToast } = useToastStore((state) => ({ pushToast: state.push }));
   const { account } = useUserStore((state) => ({
     account: state.account,
@@ -42,6 +51,7 @@ const Home: NextPage = () => {
     id: number;
     model: "client" | "event" | "project" | "task" | "time_entry" | null;
   }>({ id: -1, model: null });
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
   const [clientDraft, setClientDraft] = useState<Client>({
     id: -1,
@@ -223,32 +233,39 @@ const Home: NextPage = () => {
         playSoundEffect(SoundEffects.interfaceError);
       }
     }
-
     setLoadingStatus({ ...loadingStatus, project: false });
   };
 
   const saveTimeEntry: React.FormEventHandler = async (e) => {
     e.preventDefault();
     setLoadingStatus({ ...loadingStatus, time_entry: true });
+    let newTimeEntry: TimeEntry | undefined;
     if (timeEntryDraft.id && timeEntryDraft.id > 0) {
       try {
-        const newTimeEntry = await timeEntry.update({
-          ...timeEntryDraft,
-          id: timeEntryDraft.id!,
-          start: parseDateTime(timeEntryDraft.start!).toISOString(),
-          stop: timeEntryDraft.stop
-            ? parseDateTime(timeEntryDraft.stop).toISOString()
-            : "",
-          duration: differenceInSeconds(
-            parseDateTime(timeEntryDraft.stop!),
-            parseDateTime(timeEntryDraft.start!)
-          ),
-        });
-        if (newTimeEntry && newTimeEntry.stop) {
-          setCurrentEntry(null);
+        if (timeEntryDraft.stop) {
+          newTimeEntry = await timeEntry.update({
+            ...timeEntryDraft,
+            id: timeEntryDraft.id!,
+            pid: timeEntryDraft.pid === -1 ? undefined : timeEntryDraft.pid,
+            start: parseDateTime(timeEntryDraft.start!).toISOString(),
+            stop: timeEntryDraft.stop
+              ? parseDateTime(timeEntryDraft.stop).toISOString()
+              : "",
+            duration: differenceInSeconds(
+              parseDateTime(timeEntryDraft.stop!),
+              parseDateTime(timeEntryDraft.start!)
+            ),
+          });
         } else {
-          setCurrentEntry(newTimeEntry || null);
+          newTimeEntry = await timeEntry.update({
+            ...timeEntryDraft,
+            id: timeEntryDraft.id!,
+            pid: timeEntryDraft.pid === -1 ? undefined : timeEntryDraft.pid,
+            start: parseDateTime(timeEntryDraft.start!).toISOString(),
+            duration: getUnixTime(parseDateTime(timeEntryDraft.start!)) * -1,
+          });
         }
+        await resetTimeEntryRelated();
         setModalStatus({ ...modalStatus, time_entry: false });
         playSoundEffect(SoundEffects.interfaceSuccess);
       } catch (err) {
@@ -261,6 +278,7 @@ const Home: NextPage = () => {
           isClosable: true,
         });
         playSoundEffect(SoundEffects.interfaceError);
+        setLoadingStatus({ ...loadingStatus, time_entry: false });
       }
     } else {
       const timeEntryCopy = {
@@ -272,13 +290,14 @@ const Home: NextPage = () => {
         try {
           await timeEntry.create({
             ...timeEntryCopy,
+            pid: timeEntryCopy.pid === -1 ? undefined : timeEntryCopy.pid,
             stop: parseDateTime(timeEntryCopy.stop!).toISOString(),
             duration: differenceInSeconds(
               parseDateTime(timeEntryDraft.stop!),
               parseDateTime(timeEntryDraft.start!)
             ),
           });
-          setCurrentEntry(null);
+          await resetTimeEntryRelated();
           setModalStatus({ ...modalStatus, time_entry: false });
           playSoundEffect(SoundEffects.interfaceSuccess);
         } catch (err) {
@@ -291,12 +310,17 @@ const Home: NextPage = () => {
             isClosable: true,
           });
           playSoundEffect(SoundEffects.interfaceError);
+          setLoadingStatus({ ...loadingStatus, time_entry: false });
         }
       } else {
         try {
           delete timeEntryCopy.stop;
-          const newTimeEntry = await timeEntry.start(timeEntryCopy);
-          setCurrentEntry(newTimeEntry || null);
+          const newTimeEntry = await timeEntry.create({
+            ...timeEntryCopy,
+            pid: timeEntryCopy.pid === -1 ? undefined : timeEntryCopy.pid,
+            duration: getUnixTime(new Date(timeEntryCopy.start)) * -1,
+          });
+          await resetTimeEntryRelated();
           setModalStatus({ ...modalStatus, time_entry: false });
           playSoundEffect(SoundEffects.interfaceSuccess);
         } catch (err) {
@@ -309,9 +333,15 @@ const Home: NextPage = () => {
             isClosable: true,
           });
           playSoundEffect(SoundEffects.interfaceError);
+          setLoadingStatus({ ...loadingStatus, time_entry: false });
         }
       }
     }
+  };
+
+  const resetTimeEntryRelated = async () => {
+    setCurrentEntry((await timeEntry.current()) || null);
+    setTimeEntries((await timeEntry.list()) || []);
     setLoadingStatus({ ...loadingStatus, time_entry: false });
   };
 
@@ -359,15 +389,16 @@ const Home: NextPage = () => {
       default:
         break;
     }
-    setDeleteCandidate({ id: -1, model: null });
     setLoadingStatus({ ...loadingStatus, delete: false });
+    setDeleteCandidate({ id: -1, model: null });
+    setShowConfirmationDialog(false);
   };
 
   return (
     <div>
       <ConfirmationDialog
         isLoading={loadingStatus.delete}
-        isOpen={deleteCandidate.id !== -1}
+        isOpen={showConfirmationDialog}
         title="Are you sure?"
         subtitle={`Deleting this ${
           deleteCandidate.model === "time_entry"
@@ -379,10 +410,12 @@ const Home: NextPage = () => {
           if (choice) {
             handleDelete();
           } else {
+            setShowConfirmationDialog(false);
             setDeleteCandidate({ id: -1, model: null });
           }
         }}
       />
+
       <ActionBar
         handleActionRequest={(action) => {
           setModalStatus({ ...modalStatus, [action.toLowerCase()]: true });
@@ -424,6 +457,7 @@ const Home: NextPage = () => {
           handleClose={() => setModalStatus({ ...modalStatus, project: false })}
           handleDelete={(pid: number) => {
             setDeleteCandidate({ id: pid, model: "project" });
+            setShowConfirmationDialog(true);
           }}
           handleSubmit={saveProject}
           isLoading={loadingStatus.project}
@@ -453,6 +487,7 @@ const Home: NextPage = () => {
           }
           handleDelete={(id) => {
             setDeleteCandidate({ id, model: "time_entry" });
+            setShowConfirmationDialog(true);
           }}
           handleSubmit={saveTimeEntry}
           onChange={setTimeEntryDraft}
@@ -471,9 +506,25 @@ const Home: NextPage = () => {
         </header>
         <main className="box-border h-full px-2 pb-16 mx-auto md:masonry-2-col before:box-inherit after:box-inherit md:px-0">
           <section className="box-border w-full p-4 mb-4 space-y-8 overflow-hidden md:mx-4 break-inside group ">
-            <h4 className="text-4xl font-bold transition-colors duration-300 group-hover:text-violet-600">
-              Time Entries.
-            </h4>
+            <div className="flex items-center justify-between space-x-2">
+              <h4 className="text-4xl font-bold transition-colors duration-300 group-hover:text-violet-600">
+                Time Entries.
+              </h4>
+              <button
+                className="secondary"
+                type="button"
+                onClick={() => {
+                  setTimeEntryDraft({
+                    ...timeEntryDraft,
+                    start: formatDateTime(new Date()),
+                  });
+                  setModalStatus({ ...modalStatus, time_entry: true });
+                }}
+              >
+                <UilPlus />
+              </button>
+            </div>
+
             <CurrentTimeEntry
               currentEntry={currentEntry}
               handleEdit={(timeEntry) => {
@@ -489,7 +540,17 @@ const Home: NextPage = () => {
               setCurrentEntry={setCurrentEntry}
             />
 
-            <TimeEntriesWidget />
+            <TimeEntriesWidget
+              handleEdit={(entry) => {
+                setTimeEntryDraft({
+                  ...timeEntryDraft,
+                  ...entry,
+                  start: formatDateTime(new Date(entry.start!)),
+                  stop: formatDateTime(new Date(entry.stop!)),
+                });
+                setModalStatus({ ...modalStatus, time_entry: true });
+              }}
+            />
           </section>
           <TasksWidget />
           <EventsWidget />

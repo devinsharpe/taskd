@@ -3,6 +3,7 @@ import React, { FormEventHandler, useEffect, useState } from "react";
 import { UilCheck, UilTimes, UilTrashAlt } from "@iconscout/react-unicons";
 
 import Button from "./button";
+import GroupedProjectOptions from "./grouped-project-options";
 import { format } from "date-fns";
 import { formatDateTime } from "../lib/date-time-helpers";
 import { useTogglStore } from "../store";
@@ -24,10 +25,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   handleSubmit,
   onChange,
 }) => {
-  const { clientGroups, tags } = useTogglStore((state) => ({
-    clientGroups: state.clientGroups.filter(
-      (clientGroup) => clientGroup.projects.length
-    ),
+  const { tags } = useTogglStore((state) => ({
     tags: state.tags,
   }));
 
@@ -75,16 +73,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                   })
                 }
               >
-                <option value="-1">None</option>
-                {clientGroups.map((clientGroup) => (
-                  <optgroup key={clientGroup.id} label={clientGroup.name}>
-                    {clientGroup.projects.map((project) => (
-                      <option value={project.id!} key={project.id!}>
-                        {project.name}
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
+                <GroupedProjectOptions />
               </select>
             </fieldset>
             <fieldset>
