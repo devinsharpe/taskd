@@ -56,7 +56,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             name="client"
             id="project-client"
             className="w-full focus:ring-emerald-400 focus:border-emerald-400"
-            defaultValue="-1"
             value={project.cid && project.cid > 0 ? project.cid.toString() : -1}
             onChange={(e) =>
               onChange({ ...project, cid: parseInt(e.target.value, 10) })
