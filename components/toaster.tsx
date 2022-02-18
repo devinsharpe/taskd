@@ -4,8 +4,7 @@ import {
   Variants,
   motion,
 } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import { UilAngleDown, UilEllipsisH, UilTimes } from "@iconscout/react-unicons";
+import React from "react";
 
 import Toast from "./toast";
 import { useToastStore } from "../store";
