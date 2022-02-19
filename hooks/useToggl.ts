@@ -14,6 +14,14 @@ import { add, formatISO, sub } from "date-fns";
 
 const TOGGL_URL = "https://api.track.toggl.com/api/v8";
 
+const getBaseURL = () => {
+  console.log("getting url", process.env.NEXT_PUBLIC_CORS_ANYWHERE_URL);
+  if (process.env.NEXT_PUBLIC_CORS_ANYWHERE_URL) {
+    return process.env.NEXT_PUBLIC_CORS_ANYWHERE_URL + TOGGL_URL;
+  }
+  return TOGGL_URL;
+};
+
 export declare class TogglError extends Error {
   readonly messages: string[];
   constructor(message: string[]);
@@ -39,7 +47,7 @@ const authenticate = async (
   if (typeof window !== "undefined") {
     setToken(token);
     const res = await fetch(
-      `${TOGGL_URL}/me?with_related_data=${withRelatedData.toString()}`,
+      `${getBaseURL()}/me?with_related_data=${withRelatedData.toString()}`,
       {
         headers: {
           Authorization: "Basic " + window.btoa(token + ":api_token"),
@@ -70,7 +78,7 @@ const togglFetch: <ReturnType, BodyType = undefined>(
   method?: "GET" | "POST" | "PUT" | "DELETE" | "LIST",
   body?: BodyType
 ) => Promise<ReturnType | undefined> = async (url, method = "GET", body) => {
-  const res = await fetch(`${TOGGL_URL}${url}`, {
+  const res = await fetch(`${getBaseURL()}${url}`, {
     method: method === "LIST" ? "GET" : method,
     headers: getHeaders(),
     body: body ? JSON.stringify(body) : undefined,
