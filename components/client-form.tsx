@@ -95,7 +95,10 @@ const ClientForm: React.FC<ClientFormProps> = ({
         >
           <div className="flex items-center w-full space-x-2">
             <UilCheck />
-            <span>Add Client</span>
+            <span>
+              {client.id && client.id === -1 ? "Add " : "Edit "}
+              <span className="hidden md:inline-block">Client</span>
+            </span>
           </div>
         </Button>
         {client.id === -1 && (

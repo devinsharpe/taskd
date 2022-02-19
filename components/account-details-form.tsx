@@ -83,14 +83,14 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({
               buttonNode={
                 <button
                   className="p-1 rounded-lg dark:text-white text-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-600 focus:ring-2 focus:outline-none focus:ring-zinc-300"
-                  onClick={() => console.log(user)}
+                  type="button"
                 >
                   <UilInfo />
                 </button>
               }
             >
               <p>
-                You can find this at{" "}
+                You can find this at&nbsp;
                 <a
                   href="https://toggl.com/track/"
                   target="_blank"
@@ -98,8 +98,8 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({
                   className="underline"
                 >
                   Toggl.com
-                </a>{" "}
-                &gt; Profile Settings &gt; API Token
+                </a>
+                &nbsp; &gt; Profile Settings &gt; API Token
               </p>
             </SimplePopover>
           </div>

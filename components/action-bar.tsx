@@ -105,7 +105,7 @@ const ActionBar: React.FC<ActionBarProps> = ({ handleActionRequest }) => {
         variants={variants}
         initial="hidden"
         animate="visible"
-        className="fixed left-0 right-0 z-20 flex items-center justify-center w-16 mx-auto bg-white border-2 rounded-full shadow-lg aspect-square dark:text-white dark:bg-zinc-800 focus:outline-none bottom-4 focus:ring-4 hover:text-zinc-600 dark:hover:text-zinc-400 focus:text-zinc-600 dark:focus:text-zinc-400 focus:ring-zinc-600/50 dark:focus:ring-zinc-400/50 focus:border-zinc-600 dark:focus:border-zinc-400"
+        className="fixed left-0 right-0 z-20 flex items-center justify-center w-16 h-16 mx-auto bg-white border-2 rounded-full shadow-lg dark:text-white dark:bg-zinc-800 focus:outline-none bottom-4 focus:ring-4 hover:text-zinc-600 dark:hover:text-zinc-400 focus:text-zinc-600 dark:focus:text-zinc-400 focus:ring-zinc-600/50 dark:focus:ring-zinc-400/50 focus:border-zinc-600 dark:focus:border-zinc-400"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => {

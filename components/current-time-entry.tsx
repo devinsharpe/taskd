@@ -103,7 +103,7 @@ const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({
     <>
       {currentEntry ? (
         <div className="flex items-center justify-between p-4 bg-white border rounded-lg shadow-lg dark:bg-zinc-800 dark:hover:border-white dark:border-zinc-800 hover:border-black">
-          <div className="w-1/2 md:w-auto">
+          <div className="md:w-auto">
             <div className="flex items-center pb-1 space-x-1">
               <div className="text-violet-600">
                 <UilStopwatch />
@@ -139,7 +139,7 @@ const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center w-1/2 space-x-4 md:w-auto">
+          <div className="flex items-center justify-end space-x-4 md:w-auto">
             {duration !== null && (
               <p className="text-xl font-semibold">{formatSeconds(duration)}</p>
             )}

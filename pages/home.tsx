@@ -133,6 +133,13 @@ const Home: NextPage = () => {
         color: "1",
       });
     }
+    if (!modalStatus.tag) {
+      setTagDraft({
+        id: -1,
+        name: "",
+        wid: currentWorkspace,
+      });
+    }
     if (!modalStatus.time_entry) {
       setTimeEntryDraft({
         id: -1,
@@ -145,6 +152,12 @@ const Home: NextPage = () => {
         created_with: process.env.NEXT_PUBLIC_TOGGL_APP_NAME!,
         duronly: false,
       });
+    }
+
+    if (Object.values(modalStatus).findIndex((status) => status) !== -1) {
+      document.querySelector("body")!.style.overflowY = "hidden";
+    } else {
+      document.querySelector("body")!.style.overflowY = "auto";
     }
   }, [modalStatus, currentWorkspace]);
 
@@ -465,7 +478,7 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div>
+    <>
       <ConfirmationDialog
         isLoading={loadingStatus.delete}
         isOpen={showConfirmationDialog}
@@ -717,7 +730,7 @@ const Home: NextPage = () => {
           />
         </main>
       </div>
-    </div>
+    </>
   );
 };
 

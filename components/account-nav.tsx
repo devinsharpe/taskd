@@ -132,7 +132,7 @@ const AccountNav: React.FC<AccountNavProps> = ({
           variants={buttonVariants}
           initial="initial"
           animate="visible"
-          className="z-20 flex items-center justify-center p-4 bg-white border-2 rounded-full shadow-lg dark:bg-zinc-800 aspect-square focus:outline-none focus:border-black dark:focus:border-white"
+          className="z-20 flex items-center justify-center bg-white border-2 rounded-full shadow-lg w-14 h-14 dark:bg-zinc-800 focus:outline-none focus:border-black dark:focus:border-white"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => {
@@ -144,7 +144,7 @@ const AccountNav: React.FC<AccountNavProps> = ({
             setIsOpen(!isOpen);
           }}
         >
-          <p className="font-semibold">
+          <p className="font-semibold leading-none">
             {`${account.firstName.charAt(0)}${account.lastName.charAt(
               0
             )}`.toUpperCase()}

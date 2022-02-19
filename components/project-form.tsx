@@ -100,7 +100,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           <div className="flex items-center w-full space-x-2">
             <UilCheck />
             <span>
-              {project.id && project.id === -1 ? "Add Project" : "Edit Project"}
+              {project.id && project.id === -1 ? "Add " : "Edit "}
+              <span className="hidden md:inline-block">Project</span>
             </span>
           </div>
         </Button>

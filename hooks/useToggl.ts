@@ -15,7 +15,6 @@ import { add, formatISO, sub } from "date-fns";
 const TOGGL_URL = "https://api.track.toggl.com/api/v8";
 
 const getBaseURL = () => {
-  console.log("getting url", process.env.NEXT_PUBLIC_CORS_ANYWHERE_URL);
   if (process.env.NEXT_PUBLIC_CORS_ANYWHERE_URL) {
     return process.env.NEXT_PUBLIC_CORS_ANYWHERE_URL + TOGGL_URL;
   }
