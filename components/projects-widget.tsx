@@ -111,22 +111,19 @@ const ProjectsWidget: React.FC<ProjectsWidgetProps> = ({
                 key={project.id!}
                 className="relative flex items-center px-4 py-2 overflow-hidden bg-white border rounded-lg dark:bg-zinc-800 dark:border-zinc-600 hover:border-black dark:hover:border-white group"
               >
-                <div className="w-full">
-                  <h4 className="z-10 text-xl font-semibold md:text-2xl hover:underline">
+                <div className="w-full truncate">
+                  <button
+                    className="z-10 text-xl font-semibold text-left md:text-2xl hover:underline dark:text-white"
+                    onClick={() => handleEdit(project.id!)}
+                  >
                     {project.name}
-                  </h4>
+                  </button>
 
                   {project.cid && clientsMap[project.cid] && (
                     <h5 className="text-sm">{clientsMap[project.cid].name}</h5>
                   )}
                 </div>
                 <div className="flex items-end justify-end space-x-4">
-                  <button
-                    className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700"
-                    onClick={() => handleEdit(project.id!)}
-                  >
-                    <UilEditAlt />
-                  </button>
                   <button
                     className="flex items-center justify-center p-2 rounded-lg dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-700"
                     onClick={() => handleNewEvent(project.id!)}
