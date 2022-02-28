@@ -25,7 +25,9 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   const authResult = await getUser(req);
   if (
     req.nextUrl.pathname.includes("/api/") ||
-    req.nextUrl.pathname.includes("/sounds/")
+    req.nextUrl.pathname.includes("/sounds/") ||
+    req.nextUrl.pathname.includes("/icons/") ||
+    req.nextUrl.pathname.includes("/manifest.json")
   ) {
     return NextResponse.next();
   } else if (AUTH_PAGES.includes(req.nextUrl.pathname)) {

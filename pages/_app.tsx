@@ -14,6 +14,7 @@ import Toaster from "../components/toaster";
 import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
 import useToggl from "../hooks/useToggl";
+import Head from "next/head";
 
 export enum SoundEffects {
   interfaceClose = "interface-close",
@@ -154,6 +155,27 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <meta charSet="utf-8" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+        />
+        <meta
+          name="description"
+          content="A simple app to help manage all of your timers, events, and tasks."
+        />
+        <meta
+          name="keywords"
+          content="productivity, tasks, events, calendar, application"
+        />
+        <meta name="theme-color" content="#18181b" />
+        <title>Task&apos;d</title>
+
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+      </Head>
       <audio
         src="/sounds/interface-close.wav"
         autoPlay={false}
