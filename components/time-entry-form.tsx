@@ -4,7 +4,6 @@ import { UilCheck, UilTimes, UilTrashAlt } from "@iconscout/react-unicons";
 
 import Button from "./button";
 import GroupedProjectOptions from "./grouped-project-options";
-import { format } from "date-fns";
 import { formatDateTime } from "../lib/date-time-helpers";
 import { useTogglStore } from "../store";
 
@@ -31,7 +30,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="space-y-4 modal-body">
+      <div className="space-y-4">
         <fieldset className="w-full">
           <label
             htmlFor="time-entry-description"

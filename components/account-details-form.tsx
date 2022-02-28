@@ -36,7 +36,7 @@ const AccountDetailsForm: React.FC<AccountDetailsFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="space-y-4 modal-body">
+      <div className="space-y-4">
         <fieldset className="group">
           <label htmlFor="firstName" className="required">
             First Name

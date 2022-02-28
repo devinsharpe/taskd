@@ -599,20 +599,18 @@ const Home: NextPage = () => {
         title="Tags"
         isClosable={true}
       >
-        <section className="modal-body">
-          <TagForm
-            handleSubmit={saveTag}
-            isLoading={loadingStatus.tag}
-            onChange={setTagDraft}
-            tag={tagDraft}
-          />
-          <TagList
-            handleDelete={(id) => {
-              setDeleteCandidate({ id, model: "tag" });
-              setShowConfirmationDialog(true);
-            }}
-          />
-        </section>
+        <TagForm
+          handleSubmit={saveTag}
+          isLoading={loadingStatus.tag}
+          onChange={setTagDraft}
+          tag={tagDraft}
+        />
+        <TagList
+          handleDelete={(id) => {
+            setDeleteCandidate({ id, model: "tag" });
+            setShowConfirmationDialog(true);
+          }}
+        />
         <footer className="modal-footer">
           <button
             className="flex items-center justify-center w-full space-x-2 secondary"

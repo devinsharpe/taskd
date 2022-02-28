@@ -9,7 +9,7 @@ interface TagListProps {
 const TagList: React.FC<TagListProps> = ({ handleDelete }) => {
   const { tags } = useTogglStore((state) => ({ tags: state.tags }));
   return (
-    <ul className="w-full px-1 my-2 space-y-2 overflow-y-auto max-h-96">
+    <ul className="w-full mt-2 space-y-2">
       {tags.map((tag) => (
         <TagItem tag={tag} key={tag.id} handleDelete={handleDelete} />
       ))}

@@ -16,7 +16,7 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
   }));
   return (
     <form onSubmit={(e) => e.preventDefault()}>
-      <div className="grid w-full grid-cols-1 gap-4 modal-body md:grid-cols-2">
+      <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
         <fieldset>
           <label
             htmlFor="event-start"

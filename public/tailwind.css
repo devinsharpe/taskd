@@ -79,15 +79,15 @@ button.alternate {
 }
 
 header.modal-header {
-  @apply flex items-center justify-between w-full px-8 pt-8;
+  @apply flex items-center justify-between w-full px-8 py-4 border-b;
 }
 
 .modal-body {
-  @apply px-8 pb-4;
+  @apply px-8 pb-24 pt-4 overflow-y-scroll max-h-[80vh];
 }
 
 footer.modal-footer {
-  @apply flex items-center px-8 py-4 space-x-4 border-t bg-zinc-100 dark:bg-zinc-900 dark:border-zinc-600;
+  @apply absolute bottom-0 left-0 right-0 flex items-center px-8 py-4 space-x-4 border-t bg-zinc-100 dark:bg-zinc-900 dark:border-zinc-600;
 }
 
 fieldset {

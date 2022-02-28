@@ -17,7 +17,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
 
   return (
     <form onSubmit={(e) => e.preventDefault()}>
-      <div className="space-y-4 modal-body">
+      <div className="space-y-4">
         <fieldset className="w-full">
           <label
             htmlFor="task-title"

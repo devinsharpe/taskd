@@ -59,12 +59,12 @@ const TimeEntriesWidget: React.FC<TimeEntriesWidgetProps> = ({
   }, [buildDaysList]);
 
   return (
-    <ul className="relative overflow-x-hidden overflow-y-auto bg-white border rounded-lg dark:bg-zinc-800 dark:border-zinc-600 max-h-96">
+    <ul className="relative overflow-x-hidden overflow-y-auto bg-white border rounded-lg dark:bg-zinc-800 dark:border-zinc-600 max-h-64 md:max-h-96">
       {days.map((day, index) => (
         <div key={day.date.toISOString()}>
           {index === 0 && (
             <h4
-              className="sticky top-0 z-[5] px-6 pt-4 pb-4 font-semibold bg-white border-b dark:border-zinc-600 dark:bg-zinc-800"
+              className="sticky top-0 z-[5] px-6 pt-4 pb-4 font-semibold bg-white border-b dark:border-zinc-600 dark:bg-zinc-800 rounded-t-xl"
               key={`header-${day.date.toISOString()}`}
             >
               Today
@@ -73,7 +73,7 @@ const TimeEntriesWidget: React.FC<TimeEntriesWidgetProps> = ({
 
           {index === 1 && (
             <h4
-              className="sticky top-0 z-[5] px-6 pt-4 pb-4 font-semibold bg-white border-b dark:border-zinc-600 dark:bg-zinc-800"
+              className="sticky top-0 z-[5] px-6 pt-4 pb-4 font-semibold bg-white border-b dark:border-zinc-600 dark:bg-zinc-800 rounded-t-xl"
               key={`header-${day.date.toISOString()}`}
             >
               Yesterday
@@ -82,7 +82,7 @@ const TimeEntriesWidget: React.FC<TimeEntriesWidgetProps> = ({
 
           {index > 1 && (
             <h4
-              className="sticky top-0 z-[5] flex items-center justify-between px-6 pt-4 pb-4 font-semibold bg-white border-b dark:border-zinc-600 dark:bg-zinc-800"
+              className="sticky top-0 z-[5] flex items-center justify-between px-6 pt-4 pb-4 font-semibold bg-white border-b dark:border-zinc-600 dark:bg-zinc-800 rounded-t-xl"
               key={`header-${day.date.toISOString()}`}
             >
               <span>{format(day.date, "eeee")}</span>

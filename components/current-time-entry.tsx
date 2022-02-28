@@ -102,54 +102,46 @@ const CurrentTimeEntry: React.FC<CurrentTimeEntryProps> = ({
   return (
     <>
       {currentEntry ? (
-        <div className="flex items-center justify-between p-4 bg-white border rounded-lg shadow-lg dark:bg-zinc-800 dark:hover:border-white dark:border-zinc-800 hover:border-black">
-          <div className="md:w-auto">
-            <div className="flex items-center pb-1 space-x-1">
-              <div className="text-violet-600">
-                <UilStopwatch />
-              </div>
-              <button
-                className="px-2 text-violet-600 focus:outline-violet-600"
-                onClick={() => handleEdit(currentEntry)}
-              >
-                <h4 className="text-2xl font-bold truncate transition-colors duration-300 hover:underline whitespace-nowrap">
-                  {currentProject ? (
-                    <>{currentProject.name}</>
-                  ) : (
-                    <>No Project</>
-                  )}
-                </h4>
-              </button>
+        <div className="p-4 bg-white border rounded-lg shadow-lg dark:bg-zinc-800 dark:hover:border-white dark:border-zinc-800 hover:border-black">
+          <div className="flex items-center justify-start w-full mb-2 space-x-2">
+            <div className="text-violet-600">
+              <UilStopwatch />
             </div>
-            <h4 className="pb-1 text-2xl font-bold transition-colors duration-300"></h4>
-            {currentEntry.description && (
-              <p className="pb-1 text-lg font-semibold opacity-75">
-                {currentEntry.description}
-              </p>
-            )}
-            <div className="flex flex-wrap items-center">
-              {currentEntry.tags.map((tag) => (
-                <p
-                  className="px-2 py-1 mb-1 mr-1 rounded bg-zinc-200 dark:bg-zinc-700"
-                  key={(Math.random() * 1000).toString()}
-                >
-                  {tag}
+            <button
+              className="flex-grow w-full px-2 py-1 text-2xl font-bold text-left truncate transition-colors duration-300 dark:text-white hover:underline whitespace-nowrap"
+              onClick={() => handleEdit(currentEntry)}
+            >
+              {currentProject ? <>{currentProject.name}</> : <>No Project</>}
+            </button>
+            <div className="flex items-center justify-end flex-grow w-full space-x-4">
+              {duration !== null && (
+                <p className="text-xl font-semibold">
+                  {formatSeconds(duration)}
                 </p>
-              ))}
+              )}
+              <Button
+                className="rounded-full"
+                isLoading={isLoading}
+                onClick={stopEntry}
+              >
+                <UilPause />
+              </Button>
             </div>
           </div>
-
-          <div className="flex items-center justify-end space-x-4 md:w-auto">
-            {duration !== null && (
-              <p className="text-xl font-semibold">{formatSeconds(duration)}</p>
-            )}
-            <Button
-              className="rounded-full"
-              isLoading={isLoading}
-              onClick={stopEntry}
-            >
-              <UilPause />
-            </Button>
+          {currentEntry.description && (
+            <p className="pb-1 text-lg font-semibold opacity-75">
+              {currentEntry.description}
+            </p>
+          )}
+          <div className="flex items-center py-1 overflow-y-auto">
+            {currentEntry.tags.map((tag) => (
+              <p
+                className="px-2 py-1 mb-1 mr-1 rounded bg-zinc-200 dark:bg-zinc-700"
+                key={(Math.random() * 1000).toString()}
+              >
+                {tag}
+              </p>
+            ))}
           </div>
         </div>
       ) : (

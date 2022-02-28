@@ -30,7 +30,7 @@ const ClientForm: React.FC<ClientFormProps> = ({
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      <div className="space-y-4 modal-body">
+      <div className="space-y-4">
         <fieldset>
           <label
             htmlFor="client-name"

@@ -14,7 +14,7 @@ const ClientList: React.FC<ClientListProps> = ({
 }) => {
   const { clients } = useTogglStore((state) => ({ clients: state.clients }));
   return (
-    <ul className="w-full space-y-2 overflow-y-auto modal-body max-h-96">
+    <ul className="w-full space-y-2 overflow-y-auto">
       {clients.map((client) => (
         <ClientItem
           client={client}

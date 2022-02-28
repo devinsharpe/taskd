@@ -26,23 +26,21 @@ const TimeEntryItem: React.FC<TimeEntryItemProps> = ({
     setDuration(parseSeconds(entry.duration!));
   }, [entry, setDuration]);
   return (
-    <li className="flex items-start justify-between px-4 py-2 list-none">
-      <div>
+    <li className="px-4 py-2 list-none ">
+      <div className="flex items-center justify-between space-x-3">
         <button
-          className="px-2 pb-1 text-violet-600 focus:outline-violet-600"
+          className="w-full px-2 py-1 text-lg font-bold text-left truncate transition-colors duration-300 dark:text-white hover:underline"
           onClick={() => handleEdit(entry)}
         >
-          {project ? (
-            <h5 className="text-lg font-bold transition-colors duration-300 hover:underline whitespace-nowrap">
-              {project.name}
-            </h5>
-          ) : (
-            <h5 className="text-lg font-bold transition-colors duration-300 whitespace-nowrap">
-              No Project
-            </h5>
-          )}
+          {project ? <>{project.name}</> : <>No Project</>}
         </button>
-
+        <p className="whitespace-nowrap">{`${duration.hours}:${duration.minutes
+          .toString()
+          .padStart(2, "0")}:${duration.seconds
+          .toString()
+          .padStart(2, "0")}`}</p>
+      </div>
+      <div className="flex items-center justify-between text-right whitespace-nowrap">
         <div className="flex flex-wrap items-center pl-2 space-x-2 text-zinc-800 dark:text-white">
           {entry.description && (
             <p className="pb-1 font-semibold opacity-75 whitespace-nowrap">
@@ -51,13 +49,6 @@ const TimeEntryItem: React.FC<TimeEntryItemProps> = ({
           )}
           {entry.tags && <UilTagAlt size="16" />}
         </div>
-      </div>
-      <div className="flex flex-col items-end justify-between h-full text-right">
-        <p>{`${duration.hours}:${duration.minutes
-          .toString()
-          .padStart(2, "0")}:${duration.seconds
-          .toString()
-          .padStart(2, "0")}`}</p>
         <p>
           {format(new Date(entry.start!), "p")} &ndash;{" "}
           {format(new Date(entry.stop!), "p")}

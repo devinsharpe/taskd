@@ -50,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.aside
-            className={`fixed max-h-[calc(100vh-4rem)] my-auto overflow-y-auto inset-0 z-50 w-5/6 m-auto border mx-auto space-y-4 bg-white shadow-xl dark:bg-zinc-800 h-min md:w-3/4 lg:w-3/5 max-w-2xl rounded-xl dark:border-zinc-600  ${className}`}
+            className={`fixed overflow-hidden max-h-[calc(100vh-4rem)] my-auto inset-0 z-50 w-5/6 m-auto border mx-auto bg-white shadow-xl dark:bg-zinc-800 h-min md:w-3/4 lg:w-3/5 max-w-2xl rounded-xl dark:border-zinc-600  ${className}`}
             variants={variants}
             initial="dialogInitial"
             animate="dialogVisible"
@@ -70,7 +70,7 @@ const Modal: React.FC<ModalProps> = ({
                 </button>
               )}
             </header>
-            <div>{children}</div>
+            <div className="modal-body">{children}</div>
           </motion.aside>
         )}
       </AnimatePresence>
